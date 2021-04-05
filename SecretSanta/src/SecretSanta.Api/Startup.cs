@@ -12,6 +12,10 @@ namespace SecretSanta.Api
 {
     public class Startup
     {
+        private readonly string _ApiMessage = 
+            "You're still welcome here at the API!\n" +
+            "-Cybotive";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -32,7 +36,7 @@ namespace SecretSanta.Api
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello from API!");
+                    await context.Response.WriteAsync(_ApiMessage);
                 });
             });
         }
