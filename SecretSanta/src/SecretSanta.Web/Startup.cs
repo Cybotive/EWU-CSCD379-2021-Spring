@@ -12,6 +12,8 @@ namespace SecretSanta.Web
 {
     public class Startup
     {
+        private readonly string webMessage = "Hello from the Web that Cybotive modified!";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -32,7 +34,7 @@ namespace SecretSanta.Web
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello from Web!");
+                    await context.Response.WriteAsync(webMessage);
                 });
             });
         }
