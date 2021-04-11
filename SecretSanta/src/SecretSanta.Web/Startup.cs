@@ -29,7 +29,7 @@ namespace SecretSanta.Web
 
             app.UseRouting();
 
-            //app.UseStaticFiles(); //Might not be needed
+            app.UseStaticFiles(); //Might not be needed
 
             app.UseEndpoints(endpoints =>
             {
