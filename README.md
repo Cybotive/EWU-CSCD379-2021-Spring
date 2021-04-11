@@ -14,5 +14,6 @@ This assigment will only be modifying the SecretSanta.Web project
       - Description: ✔❌
       - Url: ✔❌
       - Priority (just a number for holding "order of importance"): ✔❌
+      - The gift should hold a reference to the User it belongs to: ✔❌
 - A Home page that can be used as just a standard landing page for the application: ✔❌
 - Each page should have the ability to navigate between components: ✔❌
