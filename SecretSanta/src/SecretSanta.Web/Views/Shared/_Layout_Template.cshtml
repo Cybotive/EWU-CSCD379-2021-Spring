@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Secret Santa - @ViewBag.Title</title>
+
+    <!-- Webpack Stylesheet -->
+    <% for (var filename in htmlWebpackPlugin.files.css) { %>
+    <link href="~<%= htmlWebpackPlugin.files.css[filename] %>" rel="stylesheet" />
+    <% } %>
+</head>
+<body>
+    @RenderBody()
+
+    <!-- Webpack Script -->
+    <% for (var index in htmlWebpackPlugin.files.js) { %>
+    <script src="~<%= htmlWebpackPlugin.files.js[index] %>"></script>
+    <% } %>
+</body>
+</html>
