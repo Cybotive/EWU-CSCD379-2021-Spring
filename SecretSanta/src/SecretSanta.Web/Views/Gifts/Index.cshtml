@@ -9,7 +9,7 @@
 @foreach (var gift in Model)
 {
 <section>
-    Title: @gift.Title - Description: @gift.Desc - Url: @gift.Url - Priority: @gift.Priority - Recipient: @gift.Recipient <a asp-controller="Groups" asp-action="Edit" asp-route-id=@counter>Edit</a>
+    Title: @gift.Title - Description: @gift.Desc - Url: @gift.Url - Priority: @gift.Priority - Recipient: @gift.Recipient <a asp-controller="Gifts" asp-action="Edit" asp-route-id=@counter>Edit</a>
     <form asp-controller="Gifts" asp-action="Delete" asp-route-id=@counter method="post"><button>X</button></form>
     @{counter++;}
 </section>
