@@ -1,7 +1,6 @@
 ﻿@model GiftViewModel
 
 <form asp-controller="Gifts" asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
     <div>
         <label asp-for="Title"></label>: <input type="text" asp-for="Title" />
         <span asp-validation-for="Title"></span>
@@ -19,7 +18,10 @@
         <span asp-validation-for="Priority"></span>
     </div>
     <div>
-        <label asp-for="Recipient"></label>: <input type="text" asp-for="Recipient" />
+        <label asp-for="Recipient"></label>:
+        <select asp-for="Recipient">
+            <option value="">Please select (Reference is in model but users aren't in persistent data)</option>
+        </select>
         <span asp-validation-for="Recipient"></span>
     </div>
     <button>Submit</button>

@@ -18,7 +18,10 @@
         <span asp-validation-for="Priority"></span>
     </div>
     <div>
-        <label asp-for="Recipient"></label>: <select asp-for="Recipient"></select>
+        <label asp-for="Recipient"></label>: 
+        <select asp-for="Recipient">
+            <option value="">Please select (Reference is in model but users aren't in persistent data)</option>
+        </select>
         <span asp-validation-for="Recipient"></span>
     </div>
     <button>Create</button>
