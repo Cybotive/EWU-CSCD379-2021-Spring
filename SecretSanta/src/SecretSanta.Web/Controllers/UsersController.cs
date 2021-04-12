@@ -56,7 +56,7 @@ namespace SecretSanta.Web.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            _Users.RemoveAt(id);
+            _Users.RemoveAt(id);    
             return RedirectToAction(nameof(Index));
         }
     }

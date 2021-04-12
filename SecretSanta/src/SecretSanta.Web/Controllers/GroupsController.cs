@@ -9,8 +9,8 @@ namespace SecretSanta.Web.Controllers
     {
         static List<GroupViewModel> _Groups = new List<GroupViewModel>()
         {
-            new GroupViewModel { GroupName = "Bob" },
-            new GroupViewModel { GroupName = "Bob" },
+            new GroupViewModel { GroupName = "Best Group" },
+            new GroupViewModel { GroupName = "Mediocre People" },
         };
 
         public IActionResult Index()
@@ -34,7 +34,7 @@ namespace SecretSanta.Web.Controllers
 
             return View(viewModel);
         }
-         
+        
         public IActionResult Edit(int id)
         {
             _Groups[id].Id = id;

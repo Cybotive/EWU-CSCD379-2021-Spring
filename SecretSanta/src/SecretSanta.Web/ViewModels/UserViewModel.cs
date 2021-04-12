@@ -6,7 +6,7 @@ namespace SecretSanta.Web.ViewModels
 {
     public class UserViewModel
     {
-        public int Id { get; internal set; }
+        public int Id { get; set; }
 
         [Required]
         [Display(Name = "First Name")]

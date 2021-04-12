@@ -1,0 +1,9 @@
+﻿@model GroupViewModel
+
+<form asp-controller="Groups" asp-action="Create" method="post">
+    <div>
+        <label asp-for="GroupName"></label>: <input type="text" asp-for="GroupName" />
+        <span asp-validation-for="GroupName"></span>
+    </div>
+    <button>Create</button>
+</form>
