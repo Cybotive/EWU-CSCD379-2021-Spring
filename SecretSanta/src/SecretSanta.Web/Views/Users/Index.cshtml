@@ -2,4 +2,12 @@
     ViewBag.Title = "Users";
 }
 
-<h1>this is h1</h1>
+@model List<UserViewModel>
+
+@foreach(var user in Model) {
+    <section>
+        @user.FirstName @user.LastName
+    </section>
+}
+
+<a asp-controller="Users" asp-action="Create">Create</a>
