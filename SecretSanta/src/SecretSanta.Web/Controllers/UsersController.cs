@@ -7,7 +7,7 @@ namespace SecretSanta.Web.Controllers
 {
     public class UsersController : Controller
     {
-        static List<UserViewModel> users = new List<UserViewModel>()
+        static List<UserViewModel> Users = new List<UserViewModel>()
         {
             new UserViewModel { FirstName = "Bob", LastName = "Smith" },
             new UserViewModel { FirstName = "Sandra", LastName = "Miles" },
@@ -15,7 +15,19 @@ namespace SecretSanta.Web.Controllers
 
         public IActionResult Index()
         {
-            return View(users);
+            return View(Users);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(UserViewModel viewModel)
+        {
+            Users.Add(viewModel);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
