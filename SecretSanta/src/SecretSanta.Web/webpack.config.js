@@ -81,14 +81,14 @@ module.exports = (env, argv) => {
         plugins: [
             new CleanWebpackPlugin(),
 
-            // copy src images to wwwroot
-            new CopyWebpackPlugin({
-                patterns: [
-                    // {from: 'favicon', to: distPath},
-                    // {from: 'icons', to: iconDistPath},
-                    { from: 'images', to: imgDistPath, context: srcPath }
-                ]
-            }),
+            // // copy src images to wwwroot
+            // new CopyWebpackPlugin({
+            //     patterns: [
+            //         // {from: 'favicon', to: distPath},
+            //         // {from: 'icons', to: iconDistPath},
+            //         { from: 'images', to: imgDistPath, context: srcPath }
+            //     ]
+            // }),
 
             new MiniCssExtractPlugin({
                 filename: 'css/[name].[hash].css',
