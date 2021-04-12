@@ -5,17 +5,17 @@ using SecretSanta.Web.ViewModels;
 
 namespace SecretSanta.Web.Controllers
 {
-    public class UsersController : Controller
+    public class GroupsController : Controller
     {
-        static List<UserViewModel> _Users = new List<UserViewModel>()
+        static List<GroupViewModel> _Groups = new List<GroupViewModel>()
         {
-            new UserViewModel { FirstName = "Bob", LastName = "Smith" },
-            new UserViewModel { FirstName = "Sandra", LastName = "Miles" },
+            new GroupViewModel { GroupName = "Bob" },
+            new GroupViewModel { GroupName = "Bob" },
         };
 
         public IActionResult Index()
         {
-            return View(_Users);
+            return View(_Groups);
         }
 
         public IActionResult Create()
@@ -24,11 +24,11 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(UserViewModel viewModel)
+        public IActionResult Create(GroupViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _Users.Add(viewModel);
+                _Groups.Add(viewModel);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -37,16 +37,16 @@ namespace SecretSanta.Web.Controllers
          
         public IActionResult Edit(int id)
         {
-            _Users[id].Id = id;
-            return View(_Users[id]);
+            _Groups[id].Id = id;
+            return View(_Groups[id]);
         }
 
         [HttpPost]
-        public IActionResult Edit(UserViewModel viewModel)
+        public IActionResult Edit(GroupViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _Users[viewModel.Id] = viewModel;
+                _Groups[viewModel.Id] = viewModel;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -56,7 +56,7 @@ namespace SecretSanta.Web.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            _Users.RemoveAt(id);
+            _Groups.RemoveAt(id);
             return RedirectToAction(nameof(Index));
         }
     }
