@@ -1,21 +1,28 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Secret Santa - @ViewBag.Title</title>
-
-    <!-- Webpack Stylesheet -->
+    <title>UserGroup - @ViewBag.Title</title>
+    <!-- Stylesheets -->
     <% for (var filename in htmlWebpackPlugin.files.css) { %>
     <link href="~<%= htmlWebpackPlugin.files.css[filename] %>" rel="stylesheet" />
     <% } %>
+    <!-- End Stylesheets -->
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li><a asp-controller="Users" asp-action="Index">Users</a></li>
+            <li><a asp-controller="Groups" asp-action="Index">Groups</a></li>
+        </ul>
+    </nav>
     @RenderBody()
 
-    <!-- Webpack Script -->
+    <!-- Scripts -->
     <% for (var index in htmlWebpackPlugin.files.js) { %>
     <script src="~<%= htmlWebpackPlugin.files.js[index] %>"></script>
     <% } %>
+    <!-- End Scripts -->
 </body>
 </html>
