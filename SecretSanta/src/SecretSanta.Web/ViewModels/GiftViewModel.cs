@@ -15,11 +15,11 @@ namespace SecretSanta.Web.ViewModels
         [Display(Name = "Description")]
         public string Desc { get; set; } = "";
         [Required]
-        [Display(Name = "Gift URL")]
+        [Display(Name = "URL")]
         public Uri? Url { get; set; }
-        [Display(Name = "Gift Priority")]
+        [Display(Name = "Priority")]
         public int Priority { get; set; } = -1;
-        [Display(Name = "Gift Recipient")]
+        [Display(Name = "Recipient")]
         public UserViewModel? Recipient { get; set; }
     }
 }
