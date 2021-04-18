@@ -12,7 +12,7 @@
 <body>
     <header class="bg-red-300 text-white flex flex-col sm:flex-row justify-between p-6">
         <div class="flex flex-row justify-between">
-            <a class="align-middle text-2xl leading-10" asp-controller="Home" asp-action="Index">Secret Santa</a>
+            <a class="align-middle text-2xl sm:p-4 sm:leading-6" asp-controller="Home" asp-action="Index">Secret Santa</a>
             <button class="sm:hidden" @@click="toggleMenu()"><i class="fas fa-bars text-2xl align-middle h-full"></i></button>
         </div>
         <nav class="hidden sm:inline-block">
@@ -22,9 +22,11 @@
                 <li><a asp-controller="Gifts" asp-action="Index">Gifts</a></li>
             </ul>
         </nav>
-</header>
+    </header>
 
-    @RenderBody()
+    <div class="p-4">
+        @RenderBody()
+    </div>
 
     <!-- Scripts -->
     <% for (var index in htmlWebpackPlugin.files.js) { %>

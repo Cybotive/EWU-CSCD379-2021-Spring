@@ -19,6 +19,6 @@
     }
 
     nav ul li {
-        @apply justify-between align-middle sm:inline-block sm:p-6 sm:leading-10;
+        @apply justify-between align-middle sm:p-4 sm:leading-6;
     }
 }
