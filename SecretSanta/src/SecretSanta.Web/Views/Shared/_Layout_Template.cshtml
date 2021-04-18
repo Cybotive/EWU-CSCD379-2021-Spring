@@ -10,14 +10,20 @@
     <!-- End Stylesheets -->
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li><a asp-controller="Users" asp-action="Index">Users</a></li>
-            <li><a asp-controller="Groups" asp-action="Index">Groups</a></li>
-            <li><a asp-controller="Gifts" asp-action="Index">Gifts</a></li>
-        </ul>
-    </nav>
+    <header class="bg-red-300 text-white flex flex-col sm:flex-row justify-between p-6">
+        <div class="flex flex-row justify-between">
+            <a class="align-middle text-2xl leading-10" asp-controller="Home" asp-action="Index">Secret Santa</a>
+            <button class="sm:hidden" @@click="toggleMenu()"><i class="fas fa-bars text-2xl align-middle h-full"></i></button>
+        </div>
+        <nav class="hidden sm:inline-block">
+            <ul class="flex flex-col sm:flex-row">
+                <li><a asp-controller="Users" asp-action="Index">Users</a></li>
+                <li><a asp-controller="Groups" asp-action="Index">Groups</a></li>
+                <li><a asp-controller="Gifts" asp-action="Index">Gifts</a></li>
+            </ul>
+        </nav>
+</header>
+
     @RenderBody()
 
     <!-- Scripts -->
