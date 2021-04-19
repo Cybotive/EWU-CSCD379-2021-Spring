@@ -6,6 +6,6 @@
 <form asp-controller="Gifts" asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
     @await Html.PartialAsync("_CreateOrEdit")
-    <button class="btnConfirm">Update</button>
+    <button class="btnConfirm">Save</button>
     <a class="btnCancel" asp-controller="Gifts" asp-action="Index">Cancel</a>
 </form>
