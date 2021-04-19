@@ -8,11 +8,11 @@
 <section class="grid grid-cols-1 sm:grid-cols-3">
     @foreach (var userViewModel in Model)
     {
-        <section class="border-gray-500 border-2 p-6 m-5 rounded-lg">
-            <a asp-controller="Users" asp-action="Edit" asp-route-id=@counter>@userViewModel.FirstName @userViewModel.LastName</a>
+        <section class="bg-red-100 border-gray-300 border-2 p-6 m-5 rounded-xl">
+            <a class="flex text-lg p-2 m-2 rounded-md text-white justify-center text-center bg-green-400 hover:bg-green-600" asp-controller="Users" asp-action="Edit" asp-route-id=@counter >@userViewModel.FirstName @userViewModel.LastName</a>
 
             <form asp-controller="Users" asp-action="Delete" asp-route-id=@counter method="post">
-                <button onclick="return confirm('You are about to delete @userViewModel.FirstName @userViewModel.LastName. Are you sure you want to do this?');">X</button>
+                <button class="m-2" onclick="return confirm('You are about to delete @userViewModel.FirstName @userViewModel.LastName. Are you sure you want to do this?');">X</button>
             </form>
             @{counter++;}
         </section>
