@@ -14,9 +14,9 @@
         foreach (var giftViewModel in list)
         {
             <section class="bg-red-200 border-gray-300 border-2 p-6 m-5 rounded-xl">
-                <a class="flex text-lg p-2 m-2 rounded-md text-white justify-center text-center bg-green-400 hover:bg-green-600" asp-controller="Gifts" asp-action="Edit" asp-route-id=@counter>@giftViewModel.Title</a>
+                <a class="flex text-lg p-2 m-2 rounded-md text-white justify-center text-center bg-green-400 hover:bg-green-600" asp-controller="Gifts" asp-action="Edit" asp-route-id=@giftViewModel.Id>@giftViewModel.Title</a>
 
-                <form asp-controller="Gifts" asp-action="Delete" asp-route-id=@counter method="post">
+                <form asp-controller="Gifts" asp-action="Delete" asp-route-id=@giftViewModel.Id method="post">
                     <button class="m-2" onclick="return confirm('You are about to delete @giftViewModel.Title. Are you sure you want to do this?');">
                         <i class="far fa-trash-alt text-xl text-red-700 align-middle h-full"></i>
                     </button>
