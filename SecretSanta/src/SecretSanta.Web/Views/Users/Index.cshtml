@@ -7,8 +7,11 @@
 
 @foreach (var userViewModel in Model)
 {
-    <section>
-        @userViewModel.FirstName @userViewModel.LastName <a asp-action="Edit" asp-route-id=@counter>Edit</a><form asp-action="Delete" asp-route-id=@counter method="post"><button>X</button></form>
+    <section class="border-gray-500 border-2 p-6 m-5 rounded-lg">
+        @userViewModel.FirstName @userViewModel.LastName <a asp-controller="Users" asp-action="Edit" asp-route-id=@counter>Edit</a>
+        <form asp-controller="Users" asp-action="Delete" asp-route-id=@counter method="post">
+            <button onclick="return confirm('You are about to delete @userViewModel.FirstName @userViewModel.LastName. Are you sure you want to do this?');">X</button>
+        </form>
         @{counter++;}
     </section>
 }
