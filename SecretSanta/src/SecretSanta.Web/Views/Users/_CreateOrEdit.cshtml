@@ -1,12 +1,12 @@
 @model UserViewModel
 
 <section class="flex flex-col sm:flex-row">
-    <div class="pr-4">
+    <div class="pr-4 my-2">
         <label asp-for="FirstName"></label>
         <input type="text" asp-for="FirstName" />
         <span class="text-red-600" asp-validation-for="FirstName"></span>
     </div>
-    <div class="pr-4">
+    <div class="pr-4 my-2">
         <label asp-for="LastName"></label>
         <input type="text" asp-for="LastName" />
         <span class="text-red-600" asp-validation-for="LastName"></span>
