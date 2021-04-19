@@ -21,7 +21,20 @@ namespace SecretSanta.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                MockData.Gifts.Add(viewModel);
+                int maxId = 0;
+                foreach(GiftViewModel model in MockData.Gifts)
+                {
+                    if(model.Id > maxId)
+                    {
+                        maxId = model.Id;
+                    }
+                }
+
+                if(viewModel != null) {
+                    viewModel.Id = maxId + 1;
+                    MockData.Gifts.Add(viewModel);
+                }
+                
                 return RedirectToAction(nameof(Index));
             }
 
