@@ -19,7 +19,7 @@
     }
 
     nav ul li {
-        @apply justify-between align-middle sm:p-4 sm:leading-6;
+        @apply hover:text-white justify-between align-middle sm:p-4 sm:leading-6;
     }
 
     body {
