@@ -13,9 +13,9 @@
     <header class="bg-red-300 text-white flex flex-col sm:flex-row justify-between p-6">
         <div class="flex flex-row justify-between">
             <a class="align-middle text-2xl sm:p-4 sm:leading-6" asp-controller="Home" asp-action="Index">Secret Santa</a>
-            <button class="sm:hidden" @@click="toggleMenu()"><i class="fas fa-bars text-2xl align-middle h-full"></i></button>
+            <button class="sm:hidden" onclick="toggleMenuWithJs()"><i class="fas fa-bars text-2xl align-middle h-full"></i></button>
         </div>
-        <nav class="hidden sm:inline-block">
+        <nav id="templateNav" class="hidden sm:inline-block">
             <ul class="flex flex-col sm:flex-row">
                 <li><a asp-controller="Users" asp-action="Index">Users</a></li>
                 <li><a asp-controller="Groups" asp-action="Index">Groups</a></li>
@@ -33,5 +33,19 @@
     <script src="~<%= htmlWebpackPlugin.files.js[index] %>"></script>
     <% } %>
     <!-- End Scripts -->
+
+    <script>
+        function toggleMenuWithJs() {
+            var templateNav = document.getElementById("templateNav");
+            if (templateNav) {
+                if (templateNav.classList.contains("hidden")) {
+                    templateNav.classList.remove("hidden");
+                }
+                else {
+                    templateNav.classList.add("hidden");
+                }
+            }
+        }
+    </script>
 </body>
 </html>
