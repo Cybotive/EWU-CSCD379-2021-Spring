@@ -5,10 +5,12 @@
 
 @{int counter = 0;}
 
+<a class="flex rounded-xl border-2 border-gray-600 justify-center text-center text-lg py-2 px-4 text-white bg-green-500 hover:bg-green-600" asp-action="Create">Create</a>
+
 <section class="grid grid-cols-1 sm:grid-cols-3">
     @foreach (var userViewModel in Model)
     {
-        <section class="bg-red-100 border-gray-300 border-2 p-6 m-5 rounded-xl">
+        <section class="bg-red-200 border-gray-300 border-2 p-6 m-5 rounded-xl">
             <a class="flex text-lg p-2 m-2 rounded-md text-white justify-center text-center bg-green-400 hover:bg-green-600" asp-controller="Users" asp-action="Edit" asp-route-id=@counter >@userViewModel.FirstName @userViewModel.LastName</a>
 
             <form asp-controller="Users" asp-action="Delete" asp-route-id=@counter method="post">
@@ -20,4 +22,3 @@
         </section>
     }
 </section>
-<a asp-action="Create">Create</a>
