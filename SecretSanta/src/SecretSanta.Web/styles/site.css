@@ -15,7 +15,7 @@
 
 @layer utilities {
     .input-validation-error {
-        @apply border-red-400 focus:border-red-800;
+        @apply border-2 border-yellow-400 focus:border-yellow-800;
     }
 
     nav ul li {
