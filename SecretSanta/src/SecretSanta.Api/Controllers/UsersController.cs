@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Data;
+using SecretSanta.Business;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -7,16 +10,23 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private IUserRepository UserRepository { get; }
+
+        public UsersController(IUserRepository userRepository)
+        {
+            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
+
         // /api/users
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<User> Get()
         {
-            return DataDeleteMe.Users;
+            return UserRepository.List();
         }
 
         // /api/users/<index>
         [HttpGet("{index}")]
-        public string Get(int index)
+        public User Get(int index)
         {
             return DataDeleteMe.Users[index];
         }
@@ -30,15 +40,15 @@ namespace SecretSanta.Api.Controllers
 
         // POST /api/users
         [HttpPost]
-        public void Post([FromBody] string userName)
+        public void Post([FromBody] User user)
         {
-            DataDeleteMe.Users.Add(userName);
+            DataDeleteMe.Users.Add(user);
         }
 
         [HttpPut("{index}")]
-        public void Put(int index, [FromBody]string userName)
+        public void Put(int index, [FromBody]User user)
         {
-            DataDeleteMe.Users[index] = userName; 
+            DataDeleteMe.Users[index] = user; 
         }
     }
 }

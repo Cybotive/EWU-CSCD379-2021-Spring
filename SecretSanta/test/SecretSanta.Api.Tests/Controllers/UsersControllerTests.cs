@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using SecretSanta.Business;
+using SecretSanta.Data;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -12,10 +14,10 @@ namespace SecretSanta.Api.Controllers
         public void Get_WithData_ReturnsUsers()
         {
             //Arrange
-            UsersController controller = new();
+            UsersController controller = new(new UserRepository());
 
             //Act
-            IEnumerable<string> users = controller.Get();
+            IEnumerable<User> users = controller.Get();
 
             //Assert
             Assert.IsTrue(users.Any());
