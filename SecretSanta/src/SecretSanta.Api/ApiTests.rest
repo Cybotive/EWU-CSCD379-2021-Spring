@@ -1,2 +1,25 @@
+@hostname = localhost
+@port = 5101
+@host = https://{{hostname}}:{{port}}
+@contentType = application/json
+
 ###
-GET https://localhost:5101/api/users
+GET {{host}}/api/users
+
+###
+GET {{host}}/api/users/1
+
+###
+DELETE {{host}}/api/users/0
+
+###
+POST {{host}}/api/users
+Content-Type: {{contentType}}
+
+"User Created"
+
+###
+PUT {{host}}/api/users/1
+Content-Type: {{contentType}}
+
+"User Name Updated"

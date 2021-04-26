@@ -30,9 +30,15 @@ namespace SecretSanta.Api.Controllers
 
         // POST /api/users
         [HttpPost]
-        public void Post([FromBody] string eventName)
+        public void Post([FromBody] string userName)
         {
-            DataDeleteMe.Users.Add(eventName);
+            DataDeleteMe.Users.Add(userName);
+        }
+
+        [HttpPut("{index}")]
+        public void Put(int index, [FromBody]string userName)
+        {
+            DataDeleteMe.Users[index] = userName; 
         }
     }
 }
