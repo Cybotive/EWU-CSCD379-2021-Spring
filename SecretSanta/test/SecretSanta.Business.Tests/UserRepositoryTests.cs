@@ -4,13 +4,15 @@ using System.Linq;
 using SecretSanta.Business;
 using SecretSanta.Data;
 
+// Naming Reference: <MethodBeingTested>_<ConditionBeingTested>_<ExpectedOutcome>()
+
 namespace SecretSanta.Api.Controllers
 {
     [TestClass]
     public class UserRepositoryTests
     {
-        [TestInitialize]
-        public void Setup()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
         {
             DataDeleteMe.Users.Clear();
         }

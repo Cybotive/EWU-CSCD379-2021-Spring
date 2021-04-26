@@ -28,6 +28,9 @@ namespace SecretSanta.Api.Controllers
         [HttpGet("{index}")]
         public User Get(int index)
         {
+            if(index < 0){
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
             return DataDeleteMe.Users[index];
         }
 
