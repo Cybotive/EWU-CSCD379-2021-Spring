@@ -22,6 +22,18 @@ namespace SecretSanta.Api.Controllers
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void UsersController_NullParameter_ThrowsException()
+        {
+            //Arrange - Nothing to arrange
+
+            //Act
+            UsersController controllerTemp = new(null);
+
+            //Assert - Handled in tags
+        }
+
+        [TestMethod]
         public void Get_WithData_ReturnsUsers()
         {
             //Arrange - Handled in ClassInitialize
@@ -34,16 +46,16 @@ namespace SecretSanta.Api.Controllers
         }
 
         [TestMethod]
-        public void Get_ValidIndex_ReturnsUserWithMatchingId()
+        public void Get_ValidIndex_ReturnsUser()
         {
             //Arrange
-            int id = 1;
+            int _Index = 1;
 
             //Act
-            User returnedUser = controller.Get(id);
+            User returnedUser = controller.Get(_Index);
 
             //Assert
-            Assert.AreEqual(id, returnedUser.Id);
+            Assert.IsNotNull(returnedUser);
         }
 
         [TestMethod]
@@ -51,12 +63,56 @@ namespace SecretSanta.Api.Controllers
         public void Get_NegativeIndex_ThrowsException()
         {
             //Arrange
-            int id = -1;
+            int _Id = -1;
 
             //Act
-            User returnedUser = controller.Get(id);
+            User returnedUser = controller.Get(_Id);
 
             //Assert - Handled in tags
+        }
+
+        [TestMethod]
+        public void Delete_WithData_RemovesOneUser()
+        {
+            //Arrange
+            int _Index = 0;
+            int startingCount = controller.Get().Count();
+
+            //Act
+            controller.Delete(_Index);
+            IEnumerable<User> users = controller.Get();
+
+            //Assert
+            Assert.AreEqual(startingCount - 1, users.Count());
+        }
+
+        [TestMethod]
+        public void Post_ValidUser_AddsOneUser()
+        {
+            //Arrange
+            int startingCount = controller.Get().Count();
+            User user = new User() { Id=243, FirstName="Place", LastName="Holder" };
+
+            //Act
+            controller.Post(user);
+
+            //Assert
+            Assert.AreEqual(startingCount + 1, controller.Get().Count());
+        }
+
+        [TestMethod]
+        public void Put_WithData_UpdatesEntryAtIndex()
+        {
+            //Arrange
+            int _Index = 0;
+            User expectedUser = new User() { Id=432, FirstName="Place", LastName="Holder" };
+
+            //Act
+            controller.Put(_Index, expectedUser);
+            User returnedUser = controller.Get(_Index);
+
+            //Assert
+            Assert.AreEqual(expectedUser.Id, returnedUser.Id);
         }
     }
 }
