@@ -27,6 +27,7 @@ PUT {{host}}/api/users/1
 Content-Type: {{contentType}}
 
 {
+    "Id": 101,
     "FirstName": "UserWasUpdated",
-    "LastName": "Number1"
+    "LastName": "Number101"
 }
