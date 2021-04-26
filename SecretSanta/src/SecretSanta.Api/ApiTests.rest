@@ -16,10 +16,17 @@ DELETE {{host}}/api/users/0
 POST {{host}}/api/users
 Content-Type: {{contentType}}
 
-"User Created"
+{
+    "Id": 33,
+    "FirstName": "User",
+    "LastName": "Number33"
+}
 
 ###
 PUT {{host}}/api/users/1
 Content-Type: {{contentType}}
 
-"User Name Updated"
+{
+    "FirstName": "UserWasUpdated",
+    "LastName": "Number33"
+}
