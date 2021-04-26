@@ -87,7 +87,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [TestMethod]
-        public void Post_ValidUser_AddsOneUser()
+        public void Post_ValidParameter_AddsOneUser()
         {
             //Arrange
             int startingCount = controller.Get().Count();
