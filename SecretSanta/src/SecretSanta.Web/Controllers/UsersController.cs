@@ -10,9 +10,9 @@ namespace SecretSanta.Web.Controllers
 {
     public class UsersController : Controller
     {
-        public UsersClient Client { get; }
+        public IUsersClient Client { get; }
 
-        public UsersController(UsersClient client)
+        public UsersController(IUsersClient client)
         {
             Client = client ?? throw new ArgumentNullException(nameof(client));
         }

@@ -33,6 +33,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Delete(int id)
         {
             if (Repository.Remove(id))
@@ -43,6 +44,8 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<User?> Post([FromBody] User? user)
         {
             if (user is null)
