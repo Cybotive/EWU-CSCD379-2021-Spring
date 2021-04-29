@@ -44,7 +44,11 @@ namespace SecretSanta.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                MockData.Users.Add(viewModel);
+                Client.PostAsync(new User {
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName
+                });
+                //MockData.Users.Add(viewModel);
                 return RedirectToAction(nameof(Index));
             }
 

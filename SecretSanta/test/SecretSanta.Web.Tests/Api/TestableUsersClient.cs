@@ -41,9 +41,13 @@ namespace SecretSanta.Web.Tests.Api
             throw new System.NotImplementedException();
         }
 
+        public int PostAsyncInvocationCount { get; set; }
+        public List<User> PostAsyncInvokedParameters { get; set; } = new();
         public Task<User> PostAsync(User user)
         {
-            throw new System.NotImplementedException();
+            PostAsyncInvocationCount++;
+            PostAsyncInvokedParameters.Add(user);
+            return Task.FromResult(user);
         }
 
         public Task<User> PostAsync(User user, CancellationToken cancellationToken)
