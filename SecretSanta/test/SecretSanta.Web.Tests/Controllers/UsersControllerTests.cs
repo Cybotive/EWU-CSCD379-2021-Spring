@@ -1,8 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using SecretSanta.Web.Api;
+using SecretSanta.Web.ViewModels;
 using SecretSanta.Web.Tests.Api;
 using System.Collections.Generic;
 
@@ -41,20 +43,25 @@ namespace SecretSanta.Web.Tests
             //Arrange
             TestableUsersClient usersClient = Factory.Client;
             HttpClient client = Factory.CreateClient();
-
-            User user0 = new() { FirstName = "User0First", LastName = "User0Last" };
-            string json = System.Text.Json.JsonSerializer.Serialize(user0);
-            StringContent content = new(json);
+            UserViewModel user = new() { FirstName = "User0First", LastName = "User0Last" };
+            
+            Dictionary<string, string?> values = new()
+            {
+                {"FirstName", "Place"},
+                {"LastName", "Holder"}
+            };
+            FormUrlEncodedContent content = new(values!);
 
             //Act
+            //HttpResponseMessage response = await client.PostAsJsonAsync("/Users/Create", user);
             HttpResponseMessage response = await client.PostAsync("/Users/Create", content);
 
             //Assert
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(1, usersClient.PostAsyncInvocationCount);
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
-            Assert.AreEqual(user0.FirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
-            Assert.AreEqual(user0.LastName, usersClient.PostAsyncInvokedParameters[0].LastName);
+            Assert.AreEqual(user.FirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
+            Assert.AreEqual(user.LastName, usersClient.PostAsyncInvokedParameters[0].LastName);
         }
     }
 }

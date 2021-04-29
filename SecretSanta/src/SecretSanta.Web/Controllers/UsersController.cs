@@ -65,7 +65,7 @@ namespace SecretSanta.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                MockData.Users[viewModel.Id] = viewModel;
+                MockData.Users[viewModel.Id ?? 0] = viewModel;
                 return RedirectToAction(nameof(Index));
             }
 
