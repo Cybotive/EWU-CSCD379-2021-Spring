@@ -17,7 +17,7 @@ namespace SecretSanta.Web.Tests.Api
             throw new System.NotImplementedException();
         }
 
-        public List<User>? GetAllUsersReturnValue { get; set; }
+        public List<User>? GetAllUsersReturnValue { get; set; } = new();
         public int GetAllAsyncInvocationCount { get; set; }
 
         public Task<ICollection<User>?> GetAllAsync()
@@ -42,7 +42,7 @@ namespace SecretSanta.Web.Tests.Api
         }
 
         public int PostAsyncInvocationCount { get; set; }
-        public List<User> PostAsyncInvokedParameters { get; set; } = new();
+        public List<User> PostAsyncInvokedParameters { get; } = new();
         public Task<User> PostAsync(User user)
         {
             PostAsyncInvocationCount++;
