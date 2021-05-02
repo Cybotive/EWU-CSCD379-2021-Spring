@@ -43,11 +43,14 @@ namespace SecretSanta.Web.Tests
             //Arrange
             HttpClient client = Factory.CreateClient();
             TestableUsersClient usersClient = Factory.Client;
+
+            string _testFirstName = "CWVMI";
+            string _testLastName = "Last";
             
             Dictionary<string, string?> values = new()
             {
-                { nameof(UserViewModel.FirstName), "Place" },
-                { nameof(UserViewModel.LastName), "Holder" }
+                { nameof(UserViewModel.FirstName), _testFirstName },
+                { nameof(UserViewModel.LastName), _testLastName }
             };
             FormUrlEncodedContent content = new(values!);
 
@@ -59,8 +62,8 @@ namespace SecretSanta.Web.Tests
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(1, usersClient.PostAsyncInvocationCount);
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
-            Assert.AreEqual("Place", usersClient.PostAsyncInvokedParameters[0].FirstName);
-            Assert.AreEqual("Holder", usersClient.PostAsyncInvokedParameters[0].LastName);
+            Assert.AreEqual(_testFirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
+            Assert.AreEqual(_testLastName, usersClient.PostAsyncInvokedParameters[0].LastName);
         }
     }
 }
