@@ -41,14 +41,13 @@ namespace SecretSanta.Web.Tests
         public async Task Create_WithValidModel_InvokesPostAsync()
         {
             //Arrange
-            TestableUsersClient usersClient = Factory.Client;
             HttpClient client = Factory.CreateClient();
-            UserViewModel user = new() { FirstName = "User0First", LastName = "User0Last" };
+            TestableUsersClient usersClient = Factory.Client;
             
             Dictionary<string, string?> values = new()
             {
-                {"FirstName", "Place"},
-                {"LastName", "Holder"}
+                { nameof(UserViewModel.FirstName), "Place" },
+                { nameof(UserViewModel.LastName), "Holder" }
             };
             FormUrlEncodedContent content = new(values!);
 
@@ -60,8 +59,8 @@ namespace SecretSanta.Web.Tests
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(1, usersClient.PostAsyncInvocationCount);
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
-            Assert.AreEqual(user.FirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
-            Assert.AreEqual(user.LastName, usersClient.PostAsyncInvokedParameters[0].LastName);
+            Assert.AreEqual("Place", usersClient.PostAsyncInvokedParameters[0].FirstName);
+            Assert.AreEqual("Holder", usersClient.PostAsyncInvokedParameters[0].LastName);
         }
     }
 }

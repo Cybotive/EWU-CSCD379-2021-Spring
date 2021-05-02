@@ -55,12 +55,12 @@ namespace SecretSanta.Web.Tests.Api
             throw new System.NotImplementedException();
         }
 
-        public Task<FileResponse> PutAsync(int id, User user)
+        public Task PutAsync(int id, User user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<FileResponse> PutAsync(int id, User user, CancellationToken cancellationToken)
+        public Task PutAsync(int id, User user, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
