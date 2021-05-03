@@ -43,7 +43,7 @@ namespace SecretSanta.Api.Tests.Controllers
             };
 
             //Act
-            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/1", updateUser);
+            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/456", updateUser);
 
             //Assert
             response.EnsureSuccessStatusCode();
