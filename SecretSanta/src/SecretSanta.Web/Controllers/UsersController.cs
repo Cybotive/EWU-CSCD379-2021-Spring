@@ -44,7 +44,7 @@ namespace SecretSanta.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await Client.PostAsync(new User {
+                await Client.PostAsync(new FullUser {
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName
                 });
@@ -67,8 +67,7 @@ namespace SecretSanta.Web.Controllers
             if (ModelState.IsValid)
             {
                 int id = viewModel.Id ?? default(int);
-                await Client.PutAsync(id, new User {
-                    Id = id,
+                await Client.PutAsync(id, new UpdateUser {
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName
                 });
