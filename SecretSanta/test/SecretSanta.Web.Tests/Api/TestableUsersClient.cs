@@ -31,36 +31,36 @@ namespace SecretSanta.Web.Tests.Api
             throw new System.NotImplementedException();
         }
 
-        public Task<User> GetAsync(int id)
+        public Task<FullUser> GetAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<User> GetAsync(int id, CancellationToken cancellationToken)
+        public Task<FullUser> GetAsync(int id, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
         public int PostAsyncInvocationCount { get; set; }
-        public List<User> PostAsyncInvokedParameters { get; } = new();
-        public Task<User> PostAsync(User user)
+        public List<FullUser> PostAsyncInvokedParameters { get; } = new();
+        public Task<FullUser> PostAsync(FullUser user)
         {
             PostAsyncInvocationCount++;
             PostAsyncInvokedParameters.Add(user);
             return Task.FromResult(user);
         }
 
-        public Task<User> PostAsync(User user, CancellationToken cancellationToken)
+        public Task<FullUser> PostAsync(FullUser user, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task PutAsync(int id, User user)
+        public Task PutAsync(int id, UpdateUser user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task PutAsync(int id, User user, CancellationToken cancellationToken)
+        public Task PutAsync(int id, UpdateUser user, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
