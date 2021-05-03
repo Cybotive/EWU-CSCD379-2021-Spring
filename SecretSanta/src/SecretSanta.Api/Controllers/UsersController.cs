@@ -37,7 +37,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(FullUser), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FullUser), StatusCodes.Status200OK)] // Might be User type
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<FullUser?> Get(int id)
         {

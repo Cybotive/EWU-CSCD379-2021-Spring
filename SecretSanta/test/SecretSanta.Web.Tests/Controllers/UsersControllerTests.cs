@@ -44,8 +44,8 @@ namespace SecretSanta.Web.Tests
             HttpClient client = Factory.CreateClient();
             TestableUsersClient usersClient = Factory.Client;
 
-            string _testFirstName = "CWVMI";
-            string _testLastName = "Last";
+            string _testFirstName = "CWVM";
+            string _testLastName = "IPA";
             
             Dictionary<string, string?> values = new()
             {
@@ -55,7 +55,6 @@ namespace SecretSanta.Web.Tests
             FormUrlEncodedContent content = new(values!);
 
             //Act
-            //HttpResponseMessage response = await client.PostAsJsonAsync("/Users/Create", user);
             HttpResponseMessage response = await client.PostAsync("/Users/Create", content);
 
             //Assert
