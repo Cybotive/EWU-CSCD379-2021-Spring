@@ -33,7 +33,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
         
         [TestMethod]
-        public async Task Put_WithValidData_UpdatesEvent()
+        public async Task Put_WithValidData_UpdatesUser()
         {
             //Arrange
             var factory = new CustomWebApplicationFactory();
@@ -61,6 +61,12 @@ namespace SecretSanta.Api.Tests.Controllers
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(_TestFirstName, testableRepo.SavedUser?.FirstName);
             Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
+        }
+
+        [TestMethod]
+        public async Task List_WithData_ReturnsUserList()
+        {
+            
         }
     }
 }

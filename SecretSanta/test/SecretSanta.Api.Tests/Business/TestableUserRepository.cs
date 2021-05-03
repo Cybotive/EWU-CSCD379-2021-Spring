@@ -19,9 +19,10 @@ namespace SecretSanta.Api.Tests.Business
             return ItemUser;
         }
 
+        public List<User> UserList { get; set; } = new();
         public ICollection<User> List()
         {
-            throw new System.NotImplementedException();
+            return UserList;
         }
 
         public bool Remove(int id)
