@@ -48,7 +48,6 @@ namespace SecretSanta.Web.Controllers
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName
                 });
-                //MockData.Users.Add(viewModel);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -57,7 +56,6 @@ namespace SecretSanta.Web.Controllers
 
         public IActionResult Edit(int id)
         {
-            //return View(MockData.Users[id]);
             return View(Client.GetAsync(id));
         }
 
@@ -71,7 +69,6 @@ namespace SecretSanta.Web.Controllers
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName
                 });
-                //MockData.Users[viewModel.Id ?? 0] = viewModel;
                 return RedirectToAction(nameof(Index));
             }
 
