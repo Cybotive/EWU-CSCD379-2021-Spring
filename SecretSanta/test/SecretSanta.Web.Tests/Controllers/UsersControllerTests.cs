@@ -44,13 +44,13 @@ namespace SecretSanta.Web.Tests
             HttpClient client = Factory.CreateClient();
             TestableUsersClient usersClient = Factory.Client;
 
-            string _testFirstName = "CWVM";
-            string _testLastName = "IPA";
+            string _TestFirstName = "CWVM";
+            string _TestLastName = "IPA";
             
             Dictionary<string, string?> values = new()
             {
-                { nameof(UserViewModel.FirstName), _testFirstName },
-                { nameof(UserViewModel.LastName), _testLastName }
+                { nameof(UserViewModel.FirstName), _TestFirstName },
+                { nameof(UserViewModel.LastName), _TestLastName }
             };
             FormUrlEncodedContent content = new(values!);
 
@@ -61,8 +61,8 @@ namespace SecretSanta.Web.Tests
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(1, usersClient.PostAsyncInvocationCount);
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
-            Assert.AreEqual(_testFirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
-            Assert.AreEqual(_testLastName, usersClient.PostAsyncInvokedParameters[0].LastName);
+            Assert.AreEqual(_TestFirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
+            Assert.AreEqual(_TestLastName, usersClient.PostAsyncInvokedParameters[0].LastName);
         }
     }
 }

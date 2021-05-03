@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Dto;
+using SecretSanta.Api.Tests.Business;
+using SecretSanta.Data;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
@@ -35,11 +37,21 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             //Arrange
             var factory = new CustomWebApplicationFactory();
+            TestableUserRepository testableRepo = factory.UserRepo;
             HttpClient client = factory.CreateClient();
+
+            User targetUser = new User
+            {
+                Id = 456
+            };
+            testableRepo.ItemUser = targetUser;
+
+            string _TestFirstName = "Firstname";
+            string _TestLastName = "Lastname";
             UpdateUser updateUser = new()
             {
-                FirstName = "Firstname",
-                LastName = "Lastname"
+                FirstName = _TestFirstName,
+                LastName = _TestLastName
             };
 
             //Act
@@ -47,6 +59,8 @@ namespace SecretSanta.Api.Tests.Controllers
 
             //Assert
             response.EnsureSuccessStatusCode();
+            Assert.AreEqual(_TestFirstName, testableRepo.SavedUser?.FirstName);
+            Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
         }
     }
 }
