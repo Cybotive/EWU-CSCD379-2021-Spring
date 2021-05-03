@@ -1,7 +1,7 @@
 namespace SecretSanta.Api.Dto
 {
     // Domain Transfer Object
-    public class CreateUser
+    public class FullUser
     {
         public int? Id { get; set; }
         public string? FirstName { get; set; }

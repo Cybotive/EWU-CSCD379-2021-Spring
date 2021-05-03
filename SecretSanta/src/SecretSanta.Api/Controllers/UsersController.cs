@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Api.Dto;
 using SecretSanta.Business;
 using SecretSanta.Data;
 
@@ -21,19 +21,30 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IEnumerable<User> Get()
+        public IEnumerable<FullUser> Get()
         {
-            return Repository.List();
+            ICollection<User> usersToConvert = Repository.List();
+            List<FullUser> allUsers = new();
+
+            // Convert all from SecretSanta.Data.User to SecretSanta.Api.Dto.FullUser
+            foreach(User user in usersToConvert)
+            {
+                FullUser convertedUser = UserToFullUser(user);
+                allUsers.Add(convertedUser);
+            }
+
+            return allUsers;
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FullUser), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<User?> Get(int id)
+        public ActionResult<FullUser?> Get(int id)
         {
             User? user = Repository.GetItem(id);
             if (user is null) return NotFound();
-            return user;
+
+            return UserToFullUser(user);
         }
 
         [HttpDelete("{id}")]
@@ -49,15 +60,18 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FullUser), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<User?> Post([FromBody] User? user)
+        public ActionResult<FullUser?> Post([FromBody] FullUser? user)
         {
             if (user is null)
             {
                 return BadRequest();
             }
-            return Repository.Create(user);
+            // Convert Dto type to Data then back
+            User dataUser = FullUserToUser(user);
+            User returnedUser = Repository.Create(dataUser);
+            return UserToFullUser(returnedUser);
         }
 
         [HttpPut("{id}")]
@@ -65,7 +79,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult Put(int id, [FromBody] User? user)
+        public ActionResult Put(int id, [FromBody] UpdateUser? user)
         {
             if (user is null)
             {
@@ -82,6 +96,28 @@ namespace SecretSanta.Api.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+
+        private FullUser UserToFullUser(User user)
+        {
+            FullUser convertedUser = new() {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+
+            return convertedUser;
+        }
+
+        private User FullUserToUser(FullUser user)
+        {
+            User convertedUser = new() {
+                Id = user.Id ?? 0,
+                FirstName = user.FirstName ?? "",
+                LastName = user.LastName ?? "",
+            };
+
+            return convertedUser;
         }
     }
 }
