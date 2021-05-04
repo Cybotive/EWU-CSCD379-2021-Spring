@@ -14,12 +14,6 @@ using SecretSanta.Api.Dto;
 using SecretSanta.Api.Tests.Business;
 using SecretSanta.Data;
 
-/*
-To Test:
-Delete
-Post
-*/
-
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
@@ -29,7 +23,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void UsersController_NullParameter_ThrowsException()
+        public void UsersController_WithNullParameter_ThrowsException()
         {
             //Arrange - Nothing to arrange
 
@@ -98,7 +92,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task Delete_ExistentId_RemovesUserOfId()
+        public async Task Delete_WithExistentId_RemovesUserOfId()
         {
             //Arrange
             TestableUserRepository testableRepo = Factory.UserRepo;
@@ -115,6 +109,25 @@ namespace SecretSanta.Api.Tests.Controllers
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(true, testableRepo.DeleteResult);
             Assert.IsNull(testableRepo.UserToRemove);
+        }
+
+        [TestMethod]
+        public async Task Post_WithValidUser_AddsUser()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User user = new User { Id = 334, FirstName = "IdIs334", LastName = "Truth", };
+            testableRepo.CreatedUser = user;
+
+            //Act
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", user);
+            User? userReflected = await response.Content.ReadFromJsonAsync<User?>();
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.IsTrue(AreUsersEqual(user, userReflected));
         }
 
         [TestMethod]
@@ -148,7 +161,7 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
         }
 
-        private static bool AreUsersEqual(User userA, User userB){
+        private static bool AreUsersEqual(User? userA, User? userB){
             if(userA is null || userB is null)
             {
                 if(userA is not null || userB is not null)
