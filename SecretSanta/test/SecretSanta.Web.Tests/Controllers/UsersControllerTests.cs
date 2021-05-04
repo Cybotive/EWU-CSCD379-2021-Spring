@@ -7,13 +7,26 @@ using SecretSanta.Web.Api;
 using SecretSanta.Web.ViewModels;
 using SecretSanta.Web.Tests.Api;
 using System.Collections.Generic;
+using System;
 
 namespace SecretSanta.Web.Tests
 {
     [TestClass]
     public class UsersControllerTests
     {
-    private CustomWebApplicationFactory Factory { get; } = new();
+        private CustomWebApplicationFactory Factory { get; } = new();
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void UsersController_NullParameter_ThrowsException()
+        {
+            //Arrange - Nothing to arrange
+
+            //Act
+            Web.Controllers.UsersController controllerTemp = new(null!);
+
+            //Assert - Handled in tags
+        }
 
         [TestMethod]
         public async Task Index_WithEvents_InvokesGetAllAsync()

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Dto;
 using SecretSanta.Api.Tests.Business;
 using SecretSanta.Data;
@@ -27,7 +26,7 @@ namespace SecretSanta.Api.Tests.Controllers
             //Arrange - Nothing to arrange
 
             //Act
-            UsersController controllerTemp = new(null!);
+            Api.Controllers.UsersController controllerTemp = new(null!);
 
             //Assert - Handled in tags
         }
