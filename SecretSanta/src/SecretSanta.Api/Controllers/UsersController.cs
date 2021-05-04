@@ -19,7 +19,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<FullUser>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IEnumerable<FullUser> Get()
         {
