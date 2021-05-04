@@ -34,16 +34,33 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task Get_WithData_ReturnsPopulatedUserList()
+        public async Task Get_WithData_ReturnsAccurateUserList()
         {
             //Arrange
             TestableUserRepository testableRepo = Factory.UserRepo;
             HttpClient client = Factory.CreateClient();
 
+            User user0 = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
+            User user1 = new User() { Id = 999, FirstName = "I", LastName = "Do" };
+
+            testableRepo.UserList = new List<User>() { user0, user1, };
+
             //Act
-
+            HttpResponseMessage response = await client.GetAsync("/api/users");
+            List<User>? userList = await response.Content.ReadFromJsonAsync<List<User>?>();
+            
             //Assert
+            response.EnsureSuccessStatusCode();
 
+            if(userList is null)
+            {
+                Assert.Fail("No List was received. \'" + nameof(userList) + "\' is null.");
+                return;
+            }
+
+            Assert.AreEqual(testableRepo.UserList.Count, userList.Count);
+            Assert.IsTrue(AreUsersEqual(testableRepo.UserList[0], userList[0]));
+            Assert.IsTrue(AreUsersEqual(testableRepo.UserList[1], userList[1]));
         }
 
         [TestMethod]
@@ -57,7 +74,7 @@ namespace SecretSanta.Api.Tests.Controllers
             {
                 Id = 456
             };
-            testableRepo!.ItemUser = targetUser;
+            testableRepo.ItemUser = targetUser;
 
             string _TestFirstName = "Firstname";
             string _TestLastName = "Lastname";
@@ -68,13 +85,34 @@ namespace SecretSanta.Api.Tests.Controllers
             };
 
             //Act
-            HttpResponseMessage response = await client!.PutAsJsonAsync("/api/users/" + targetUser.Id, updateUser);
+            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/" + targetUser.Id, updateUser);
 
             //Assert
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(targetUser.Id, testableRepo.SavedUser?.Id);
             Assert.AreEqual(_TestFirstName, testableRepo.SavedUser?.FirstName);
             Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
+        }
+
+        private static bool AreUsersEqual(User userA, User userB){
+            if(userA is null || userB is null)
+            {
+                if(userA is not null || userB is not null)
+                    return false;
+                
+                return true;
+            }
+
+            if(userA.Id != userB.Id)
+                return false;
+
+            if(userA.FirstName != userB.FirstName)
+                return false;
+
+            if(userA.LastName != userB.LastName)
+                return false;
+
+            return true;
         }
     }
 }
