@@ -19,6 +19,8 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class UserControllerTests
     {
+        private static CustomWebApplicationFactory Factory { get; } = new();
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void UsersController_NullParameter_ThrowsException()
@@ -30,20 +32,32 @@ namespace SecretSanta.Api.Tests.Controllers
 
             //Assert - Handled in tags
         }
-        
+
+        [TestMethod]
+        public async Task Get_WithData_ReturnsPopulatedUserList()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            //Act
+
+            //Assert
+
+        }
+
         [TestMethod]
         public async Task Put_WithValidData_UpdatesUser()
         {
             //Arrange
-            var factory = new CustomWebApplicationFactory();
-            TestableUserRepository testableRepo = factory.UserRepo;
-            HttpClient client = factory.CreateClient();
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
 
             User targetUser = new User
             {
                 Id = 456
             };
-            testableRepo.ItemUser = targetUser;
+            testableRepo!.ItemUser = targetUser;
 
             string _TestFirstName = "Firstname";
             string _TestLastName = "Lastname";
@@ -54,19 +68,13 @@ namespace SecretSanta.Api.Tests.Controllers
             };
 
             //Act
-            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/" + targetUser.Id, updateUser);
+            HttpResponseMessage response = await client!.PutAsJsonAsync("/api/users/" + targetUser.Id, updateUser);
 
             //Assert
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(targetUser.Id, testableRepo.SavedUser?.Id);
             Assert.AreEqual(_TestFirstName, testableRepo.SavedUser?.FirstName);
             Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
-        }
-
-        [TestMethod]
-        public async Task List_WithData_ReturnsUserList()
-        {
-            
         }
     }
 }
