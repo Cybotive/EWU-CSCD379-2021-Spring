@@ -14,7 +14,7 @@ namespace SecretSanta.Api.Tests.Business
         }
 
         public User? ItemUser { get; set; } //Set this beforehand in order to test functionality
-        public int ItemId { get; set; } //Set this beforehand in order to test functionality
+        public int ItemId { get; set; }
         public User? GetItem(int id)
         {
             ItemId = id;
@@ -28,6 +28,7 @@ namespace SecretSanta.Api.Tests.Business
         }
 
         public User? UserToRemove { get; set; } = new(); //Set this beforehand in order to test functionality
+        public bool DeleteResult { get; set; } = false;
         public bool Remove(int id)
         {
             User? userBefore = UserToRemove;
@@ -39,7 +40,8 @@ namespace SecretSanta.Api.Tests.Business
 
             UserToRemove = null; //"Remove" user
 
-            return ! userBefore.Equals(UserToRemove);
+            DeleteResult = ! userBefore.Equals(UserToRemove);
+            return DeleteResult;
         }
 
         public User? SavedUser {get; set;}

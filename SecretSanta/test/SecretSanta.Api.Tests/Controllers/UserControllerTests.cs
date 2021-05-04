@@ -14,6 +14,12 @@ using SecretSanta.Api.Dto;
 using SecretSanta.Api.Tests.Business;
 using SecretSanta.Data;
 
+/*
+To Test:
+Delete
+Post
+*/
+
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
@@ -61,6 +67,54 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(testableRepo.UserList.Count, userList.Count);
             Assert.IsTrue(AreUsersEqual(testableRepo.UserList[0], userList[0]));
             Assert.IsTrue(AreUsersEqual(testableRepo.UserList[1], userList[1]));
+        }
+
+        [TestMethod]
+        public async Task Get_UsingIdParameterAndWithData_ReturnsAccurateUser()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User user = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
+
+            testableRepo.ItemUser = user;
+
+            //Act
+            HttpResponseMessage response = await client.GetAsync("/api/users/" + user.Id);
+            User? userReceived = await response.Content.ReadFromJsonAsync<User?>();
+            
+            //Assert
+            response.EnsureSuccessStatusCode();
+
+            if(user is null)
+            {
+                Assert.Fail("No item was received. \'" + nameof(user) + "\' is null.");
+                return;
+            }
+
+            Assert.AreEqual(testableRepo.ItemId, user.Id);
+            Assert.IsTrue(AreUsersEqual(testableRepo.ItemUser, user));
+        }
+
+        [TestMethod]
+        public async Task Delete_ExistentId_RemovesUserOfId()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User user = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
+
+            testableRepo.UserToRemove = user;
+
+            //Act
+            HttpResponseMessage response = await client.DeleteAsync("/api/users/" + user.Id);
+            
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(true, testableRepo.DeleteResult);
+            Assert.IsNull(testableRepo.UserToRemove);
         }
 
         [TestMethod]

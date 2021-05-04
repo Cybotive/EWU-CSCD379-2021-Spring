@@ -369,9 +369,10 @@ namespace SecretSanta.Web.Api
                         ProcessResponse(client_, response_);
     
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 204)
+                        if (status_ == 404)
                         {
-                            return;
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 200)

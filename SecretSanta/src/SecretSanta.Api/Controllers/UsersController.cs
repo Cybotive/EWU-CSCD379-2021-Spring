@@ -48,7 +48,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Delete(int id)
         {
