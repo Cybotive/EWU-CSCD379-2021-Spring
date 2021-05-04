@@ -54,9 +54,17 @@ namespace SecretSanta.Web.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View(Client.GetAsync(id));
+            FullUser userToConvert = await Client.GetAsync(id);
+            UserViewModel userModel = new()
+            {
+                Id = userToConvert.Id,
+                FirstName = userToConvert.FirstName,
+                LastName = userToConvert.LastName
+            };
+
+            return View(userModel);
         }
 
         [HttpPost]
