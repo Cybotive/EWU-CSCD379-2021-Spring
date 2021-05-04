@@ -19,7 +19,7 @@ namespace SecretSanta.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ICollection<User> users = await Client.GetAllAsync();
+            ICollection<FullUser> users = await Client.GetAllAsync();
             
             List<UserViewModel> viewModelUsers = new();
             foreach(var u in users)
