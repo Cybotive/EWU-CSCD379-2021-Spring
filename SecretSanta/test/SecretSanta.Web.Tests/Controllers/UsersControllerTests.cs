@@ -19,10 +19,10 @@ namespace SecretSanta.Web.Tests
         public async Task Index_WithEvents_InvokesGetAllAsync()
         {
             //Arrange
-            User user1 = new() { Id = 1, FirstName = "Place0", LastName = "Holder0" };
-            User user2 = new() { Id = 2, FirstName = "Place1", LastName = "Holder1" };
+            FullUser user1 = new() { Id = 1, FirstName = "Place0", LastName = "Holder0" };
+            FullUser user2 = new() { Id = 2, FirstName = "Place1", LastName = "Holder1" };
             TestableUsersClient usersClient = Factory.Client;
-            usersClient.GetAllUsersReturnValue = new List<User>()
+            usersClient.GetAllUsersReturnValue = new List<FullUser>()
             {
                 user1, user2
             };

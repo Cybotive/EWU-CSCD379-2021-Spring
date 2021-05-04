@@ -17,16 +17,16 @@ namespace SecretSanta.Web.Tests.Api
             throw new System.NotImplementedException();
         }
 
-        public List<User>? GetAllUsersReturnValue { get; set; } = new();
+        public List<FullUser>? GetAllUsersReturnValue { get; set; } = new();
         public int GetAllAsyncInvocationCount { get; set; }
 
-        public Task<ICollection<User>?> GetAllAsync()
+        public Task<ICollection<FullUser>?> GetAllAsync()
         {
             GetAllAsyncInvocationCount++;
-            return Task.FromResult<ICollection<User>?>(GetAllUsersReturnValue);
+            return Task.FromResult<ICollection<FullUser>?>(GetAllUsersReturnValue);
         }
 
-        public Task<ICollection<User>> GetAllAsync(CancellationToken cancellationToken)
+        public Task<ICollection<FullUser>> GetAllAsync(CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
