@@ -9,6 +9,13 @@ using SecretSanta.Web.Tests.Api;
 using System.Collections.Generic;
 using System;
 
+/*
+To Test:
+Edit(id)
+Edit(userViewModel)
+Delete(id)
+*/
+
 namespace SecretSanta.Web.Tests
 {
     [TestClass]
@@ -18,7 +25,7 @@ namespace SecretSanta.Web.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void UsersController_NullParameter_ThrowsException()
+        public void UsersController_WithNullParameter_ThrowsException()
         {
             //Arrange - Nothing to arrange
 
