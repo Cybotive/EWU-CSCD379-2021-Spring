@@ -15,11 +15,11 @@ namespace SecretSanta.Web.Tests.Api
         public Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
+            //Not utilized by UsersController
         }
 
         public List<FullUser>? GetAllUsersReturnValue { get; set; } = new();
         public int GetAllAsyncInvocationCount { get; set; }
-
         public Task<ICollection<FullUser>?> GetAllAsync()
         {
             GetAllAsyncInvocationCount++;
@@ -29,16 +29,27 @@ namespace SecretSanta.Web.Tests.Api
         public Task<ICollection<FullUser>> GetAllAsync(CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
+            //Not utilized by UsersController
         }
 
-        public Task<FullUser> GetAsync(int id)
+        public FullUser? GetAsyncFullUser { get; set; }
+        public int GetAsyncInvocationCount { get; set; }
+        public Task<FullUser?> GetAsync(int id)
         {
-            throw new System.NotImplementedException();
+            GetAsyncInvocationCount++;
+
+            if(GetAsyncFullUser is not null && id == GetAsyncFullUser.Id)
+            {
+                return Task.FromResult<FullUser?>(GetAsyncFullUser);
+            }
+
+            return null!;
         }
 
         public Task<FullUser> GetAsync(int id, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
+            //Not utilized by UsersController
         }
 
         public int PostAsyncInvocationCount { get; set; }
@@ -53,6 +64,7 @@ namespace SecretSanta.Web.Tests.Api
         public Task<FullUser> PostAsync(FullUser user, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
+            //Not utilized by UsersController
         }
 
         public Task PutAsync(int id, UpdateUser user)
@@ -63,6 +75,7 @@ namespace SecretSanta.Web.Tests.Api
         public Task PutAsync(int id, UpdateUser user, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
+            //Not utilized by UsersController
         }
     }
 }

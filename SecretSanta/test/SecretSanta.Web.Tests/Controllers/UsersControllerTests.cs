@@ -11,7 +11,6 @@ using System;
 
 /*
 To Test:
-Edit(id)
 Edit(userViewModel)
 Delete(id)
 */
@@ -36,7 +35,7 @@ namespace SecretSanta.Web.Tests
         }
 
         [TestMethod]
-        public async Task Index_WithEvents_InvokesGetAllAsync()
+        public async Task Index_WithUsers_InvokesGetAllAsync()
         {
             //Arrange
             FullUser user1 = new() { Id = 1, FirstName = "Place0", LastName = "Holder0" };
@@ -83,6 +82,24 @@ namespace SecretSanta.Web.Tests
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
             Assert.AreEqual(_TestFirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
             Assert.AreEqual(_TestLastName, usersClient.PostAsyncInvokedParameters[0].LastName);
+        }
+
+        [TestMethod]
+        public async Task Edit_WithValidId_InvokesGetAsync()
+        {
+            //Arrange
+            FullUser user = new() { Id = 909, FirstName = "Place0", LastName = "Holder0" };
+            TestableUsersClient usersClient = Factory.Client;
+            usersClient.GetAsyncFullUser = user;
+
+            HttpClient client = Factory.CreateClient();
+
+            //Act
+            HttpResponseMessage response = await client.GetAsync("/Users/Edit/" + user.Id);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(1, usersClient.GetAsyncInvocationCount);
         }
     }
 }
