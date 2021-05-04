@@ -54,10 +54,11 @@ namespace SecretSanta.Api.Tests.Controllers
             };
 
             //Act
-            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/456", updateUser);
+            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/" + targetUser.Id, updateUser);
 
             //Assert
             response.EnsureSuccessStatusCode();
+            Assert.AreEqual(targetUser.Id, testableRepo.SavedUser?.Id);
             Assert.AreEqual(_TestFirstName, testableRepo.SavedUser?.FirstName);
             Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
         }
