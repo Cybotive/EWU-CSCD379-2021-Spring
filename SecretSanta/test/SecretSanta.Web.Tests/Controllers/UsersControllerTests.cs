@@ -199,6 +199,31 @@ namespace SecretSanta.Web.Tests
         }
 
         [TestMethod]
+        public async Task Edit_WithInvalidModel_InvokesPutAsync() // Since UserViewModel properties are all nullable
+        {
+            //Arrange
+            FullUser user = new() { Id = 342, FirstName = "EWVM", LastName = "IPuA" };
+            TestableUsersClient usersClient = Factory.Client;
+            usersClient.FullUserToUpdate = user;
+            int startingInvocation = usersClient.PutAsyncInvocationCount;
+
+            HttpClient client = Factory.CreateClient();
+
+            Dictionary<string, string?> values = new()
+            {
+                { nameof(UserViewModel.FirstName), null },
+            };
+            FormUrlEncodedContent content = new(values!);
+
+            //Act
+            HttpResponseMessage response = await client.PostAsync("/Users/Edit/" + user.Id, content);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(startingInvocation + 1, usersClient.PutAsyncInvocationCount);
+        }
+
+        [TestMethod]
         public async Task Delete_WithExistentId_InvokesDeleteAsync()
         {
             //Arrange
