@@ -34,6 +34,17 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void UsersController_WithValidParameter_DoesNotThrowException()
+        {
+            //Arrange - Nothing to arrange
+
+            //Act
+            Api.Controllers.UsersController controllerTemp = new(new TestableUserRepository());
+
+            //Assert - Nothing to assert
+        }
+
+        [TestMethod]
         public async Task Get_WithData_ReturnsAccurateUserList()
         {
             //Arrange

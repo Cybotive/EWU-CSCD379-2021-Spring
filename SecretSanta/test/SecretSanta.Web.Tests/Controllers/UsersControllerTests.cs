@@ -29,6 +29,17 @@ namespace SecretSanta.Web.Tests
         }
 
         [TestMethod]
+        public void UsersController_WithValidParameter_DoesNotThrowException()
+        {
+            //Arrange - Nothing to arrange
+
+            //Act
+            Web.Controllers.UsersController controllerTemp = new(new UsersClient(Factory.CreateClient()));
+
+            //Assert - Nothing to assert
+        }
+
+        [TestMethod]
         public async Task Index_WithUsers_InvokesGetAllAsync()
         {
             //Arrange
