@@ -18,10 +18,16 @@ namespace SecretSanta.Api.Tests.Business
         public User? GetItem(int id)
         {
             ItemId = id;
+            
+            if(ItemUser is null || ItemUser.Id != ItemId)
+            {
+                return null;
+            }
+
             return ItemUser;
         }
 
-        public List<User> UserList { get; set; } = new(); //Set this beforehand in order to test functionality
+        public List<User> UserList { get; set; } = new();
         public ICollection<User> List()
         {
             return UserList;

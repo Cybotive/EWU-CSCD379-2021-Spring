@@ -20,7 +20,7 @@ namespace SecretSanta.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FullUser>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Doesn't really happen in our implementation
         public IEnumerable<FullUser> Get()
         {
             ICollection<User> usersToConvert = Repository.List();
@@ -37,7 +37,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(FullUser), StatusCodes.Status200OK)] // Might be User type
+        [ProducesResponseType(typeof(FullUser), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<FullUser?> Get(int id)
         {
@@ -49,12 +49,12 @@ namespace SecretSanta.Api.Controllers
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // Using 204 instead of 200 since Remove() doesn't return anything
         public ActionResult Delete(int id)
         {
             if (Repository.Remove(id))
             {
-                return Ok();
+                return NoContent();
             }
             return NotFound();
         }
@@ -76,7 +76,7 @@ namespace SecretSanta.Api.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // Doesn't really happen in our implementation
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Put(int id, [FromBody] UpdateUser? user)

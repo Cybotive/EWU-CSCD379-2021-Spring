@@ -375,7 +375,7 @@ namespace SecretSanta.Web.Api
                             throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
                         }
                         else
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
                             return;
                         }

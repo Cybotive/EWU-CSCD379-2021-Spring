@@ -75,6 +75,30 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public async Task Get_WithoutData_ReturnsEmptyList()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+            testableRepo.UserList = new List<User>();
+
+            //Act
+            HttpResponseMessage response = await client.GetAsync("/api/users");
+            List<User>? userList = await response.Content.ReadFromJsonAsync<List<User>?>();
+            
+            //Assert
+            response.EnsureSuccessStatusCode();
+
+            if(userList is null)
+            {
+                Assert.Fail("No List was received. \'" + nameof(userList) + "\' is null.");
+                return;
+            }
+
+            Assert.AreEqual(0, userList.Count);
+        }
+
+        [TestMethod]
         public async Task Get_UsingIdParameterAndWithData_ReturnsAccurateUser()
         {
             //Arrange
@@ -82,7 +106,6 @@ namespace SecretSanta.Api.Tests.Controllers
             HttpClient client = Factory.CreateClient();
 
             User user = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
-
             testableRepo.ItemUser = user;
 
             //Act
@@ -102,6 +125,26 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.IsTrue(AreUsersEqual(testableRepo.ItemUser, user));
         }
 
+        [DataTestMethod]
+        [DataRow(-1)]
+        [DataRow(4242)]
+        public async Task Get_WithInvalidId_RespondsWith404(int id)
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User user = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
+            testableRepo.ItemUser = user;
+
+            //Act
+            HttpResponseMessage response = await client.GetAsync("/api/users/" + id);
+            User? userReceived = await response.Content.ReadFromJsonAsync<User?>();
+            
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
+        }
+
         [TestMethod]
         public async Task Delete_WithExistentId_RemovesUserOfId()
         {
@@ -110,7 +153,6 @@ namespace SecretSanta.Api.Tests.Controllers
             HttpClient client = Factory.CreateClient();
 
             User user = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
-
             testableRepo.UserToRemove = user;
 
             //Act
@@ -120,6 +162,23 @@ namespace SecretSanta.Api.Tests.Controllers
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(true, testableRepo.DeleteResult);
             Assert.IsNull(testableRepo.UserToRemove);
+        }
+
+        [TestMethod]
+        public async Task Delete_WithNonExistentId_RespondsWith404()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User user = new User() { Id = 998, FirstName = "Who", LastName = "Knows" };
+            testableRepo.UserToRemove = user;
+
+            //Act
+            HttpResponseMessage response = await client.DeleteAsync("/api/users/" + (user.Id + 1));
+            
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
         }
 
         [TestMethod]
@@ -139,6 +198,24 @@ namespace SecretSanta.Api.Tests.Controllers
             //Assert
             response.EnsureSuccessStatusCode();
             Assert.IsTrue(AreUsersEqual(user, userReflected));
+        }
+
+        [TestMethod]
+        public async Task Post_WithNullUser_RespondsWith400()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User? user = null;
+            testableRepo.CreatedUser = user;
+
+            //Act
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", user);
+            User? userReflected = await response.Content.ReadFromJsonAsync<User?>();
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
 
         [TestMethod]
