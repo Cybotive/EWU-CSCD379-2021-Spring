@@ -106,8 +106,6 @@ namespace SecretSanta.Web.Tests
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(startingInvocation + 1, usersClient.PostAsyncInvocationCount);
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
-            //Assert.AreEqual(_TestFirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
-            //Assert.AreEqual(_TestLastName, usersClient.PostAsyncInvokedParameters[0].LastName);
         }
 
         [TestMethod]
@@ -140,6 +138,7 @@ namespace SecretSanta.Web.Tests
             FullUser user = new() { Id = 909, FirstName = "Place0", LastName = "Holder0" };
             TestableUsersClient usersClient = Factory.Client;
             usersClient.GetAsyncFullUser = user;
+            int startingInvocation = usersClient.GetAsyncInvocationCount;
 
             HttpClient client = Factory.CreateClient();
 
@@ -148,16 +147,17 @@ namespace SecretSanta.Web.Tests
 
             //Assert
             response.EnsureSuccessStatusCode();
-            Assert.AreEqual(1, usersClient.GetAsyncInvocationCount);
+            Assert.AreEqual(startingInvocation + 1, usersClient.GetAsyncInvocationCount);
         }
 
         [TestMethod]
-        public async Task Edit_WithInvalidId_RespondsWith404()
+        public async Task Edit_WithInvalidId_InvokesGetAsync()
         {
             //Arrange
             FullUser user = new() { Id = 909, FirstName = "Place0", LastName = "Holder0" };
             TestableUsersClient usersClient = Factory.Client;
             usersClient.GetAsyncFullUser = user;
+            int startingInvocation = usersClient.GetAsyncInvocationCount;
 
             HttpClient client = Factory.CreateClient();
 
@@ -166,6 +166,7 @@ namespace SecretSanta.Web.Tests
 
             //Assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
+            Assert.AreEqual(startingInvocation + 1, usersClient.GetAsyncInvocationCount);
         }
 
         [TestMethod]
@@ -175,6 +176,7 @@ namespace SecretSanta.Web.Tests
             FullUser user = new() { Id = 342, FirstName = "EWVM", LastName = "IPuA" };
             TestableUsersClient usersClient = Factory.Client;
             usersClient.FullUserToUpdate = user;
+            int startingInvocation = usersClient.PutAsyncInvocationCount;
 
             HttpClient client = Factory.CreateClient();
             
@@ -193,10 +195,7 @@ namespace SecretSanta.Web.Tests
 
             //Assert
             response.EnsureSuccessStatusCode();
-            Assert.AreEqual(1, usersClient.PutAsyncInvocationCount);
-            //Assert.AreEqual(usersClient.FullUserToUpdate.Id, user.Id);
-            //Assert.AreEqual(usersClient.FullUserToUpdate.FirstName, _UpdatedFirstName);
-            //Assert.AreEqual(usersClient.FullUserToUpdate.LastName, _UpdatedLastName);
+            Assert.AreEqual(startingInvocation + 1, usersClient.PutAsyncInvocationCount);
         }
 
         [TestMethod]
@@ -206,15 +205,35 @@ namespace SecretSanta.Web.Tests
             FullUser user = new() { Id = 909, FirstName = "Place0", LastName = "Holder0" };
             TestableUsersClient usersClient = Factory.Client;
             usersClient.DeleteAsyncFullUser = user;
+            int startingInvocation = usersClient.DeleteAsyncInvocationCount;
 
             HttpClient client = Factory.CreateClient();
 
             //Act
-            HttpResponseMessage response = await client.PostAsync("/Users/Delete/" + user.Id, null);
+            HttpResponseMessage response = await client.PostAsync("/Users/Delete/" + user.Id, null!);
 
             //Assert
             response.EnsureSuccessStatusCode();
-            Assert.AreEqual(1, usersClient.DeleteAsyncInvocationCount);
+            Assert.AreEqual(startingInvocation + 1, usersClient.DeleteAsyncInvocationCount);
+        }
+
+        [TestMethod]
+        public async Task Delete_WithNonExistentId_InvokesDeleteAsync()
+        {
+            //Arrange
+            FullUser user = new() { Id = 909, FirstName = "Place0", LastName = "Holder0" };
+            TestableUsersClient usersClient = Factory.Client;
+            usersClient.DeleteAsyncFullUser = user;
+            int startingInvocation = usersClient.DeleteAsyncInvocationCount;
+
+            HttpClient client = Factory.CreateClient();
+
+            //Act
+            HttpResponseMessage response = await client.PostAsync("/Users/Delete/" + (user.Id - 1), null!);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(startingInvocation + 1, usersClient.DeleteAsyncInvocationCount);
         }
     }
 }
