@@ -7,9 +7,16 @@ namespace SecretSanta.Web.Tests.Api
 {
     public class TestableUsersClient : IUsersClient
     {
+        public FullUser? DeleteAsyncFullUser { get; set; }
+        public int DeleteAsyncInvocationCount { get; set; }
         public Task DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            DeleteAsyncInvocationCount++;
+
+            if(DeleteAsyncFullUser is not null && id == DeleteAsyncFullUser.Id)
+                DeleteAsyncFullUser = null;
+
+            return Task.CompletedTask;
         }
 
         public Task DeleteAsync(int id, CancellationToken cancellationToken)
@@ -43,7 +50,7 @@ namespace SecretSanta.Web.Tests.Api
                 return Task.FromResult<FullUser?>(GetAsyncFullUser);
             }
 
-            return null!;
+            return Task.FromResult<FullUser?>(null);
         }
 
         public Task<FullUser> GetAsync(int id, CancellationToken cancellationToken)
@@ -67,9 +74,16 @@ namespace SecretSanta.Web.Tests.Api
             //Not utilized by UsersController
         }
 
+        public int PutAsyncInvocationCount { get; set; }
+        public FullUser? FullUserToUpdate { get; set; }
         public Task PutAsync(int id, UpdateUser user)
         {
-            throw new System.NotImplementedException();
+            PutAsyncInvocationCount++;
+
+            if(user != null && FullUserToUpdate != null && id == FullUserToUpdate.Id)
+                FullUserToUpdate = new() { Id = id, FirstName = user.FirstName, LastName = user.LastName };
+
+            return Task.CompletedTask;
         }
 
         public Task PutAsync(int id, UpdateUser user, CancellationToken cancellationToken)
