@@ -219,7 +219,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task Put_WithValidData_UpdatesUser()
+        public async Task Put_WithValidUser_UpdatesUser()
         {
             //Arrange
             TestableUserRepository testableRepo = Factory.UserRepo;
@@ -247,6 +247,54 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(targetUser.Id, testableRepo.SavedUser?.Id);
             Assert.AreEqual(_TestFirstName, testableRepo.SavedUser?.FirstName);
             Assert.AreEqual(_TestLastName, testableRepo.SavedUser?.LastName);
+        }
+
+        [TestMethod]
+        public async Task Put_WithNullUser_RespondsWith400()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User targetUser = new User
+            {
+                Id = 456
+            };
+            testableRepo.ItemUser = targetUser;
+
+            UpdateUser? updateUser = null;
+
+            //Act
+            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/" + targetUser.Id, updateUser);
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+
+        [TestMethod]
+        public async Task Put_WithNonExistentId_RespondsWith404()
+        {
+            //Arrange
+            TestableUserRepository testableRepo = Factory.UserRepo;
+            HttpClient client = Factory.CreateClient();
+
+            User targetUser = new User
+            {
+                Id = 456
+            };
+            testableRepo.ItemUser = targetUser;
+
+            UpdateUser updateUser = new()
+            {
+                FirstName = "Firstname",
+                LastName = "Lastname"
+            };
+
+            //Act
+            HttpResponseMessage response = await client.PutAsJsonAsync("/api/users/" + (targetUser.Id + 1), updateUser);
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
         }
 
         private static bool AreUsersEqual(User? userA, User? userB){
