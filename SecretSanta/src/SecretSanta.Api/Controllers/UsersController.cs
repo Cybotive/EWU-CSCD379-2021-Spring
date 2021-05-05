@@ -49,7 +49,8 @@ namespace SecretSanta.Api.Controllers
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)] // Using 204 instead of 200 since Remove() doesn't return anything
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // Using 204 instead of 200 since this method doesn't return any content
+        [ProducesResponseType(StatusCodes.Status200OK)] // Doesn't happen in this implementation
         public ActionResult Delete(int id)
         {
             if (Repository.Remove(id))
@@ -75,10 +76,10 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)] // Doesn't really happen in our implementation
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // Using 204 instead of 200 since this method doesn't return any content
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)] // Doesn't happen in this implementation
         public ActionResult Put(int id, [FromBody] UpdateUser? user)
         {
             if (user is null)
@@ -93,7 +94,7 @@ namespace SecretSanta.Api.Controllers
                 foundUser.LastName = user.LastName ?? "";
 
                 Repository.Save(foundUser);
-                return Ok();
+                return NoContent();
             }
             return NotFound();
         }

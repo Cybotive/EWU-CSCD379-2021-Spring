@@ -380,6 +380,11 @@ namespace SecretSanta.Web.Api
                             return;
                         }
                         else
+                        if (status_ == 200)
+                        {
+                            return;
+                        }
+                        else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
@@ -448,11 +453,6 @@ namespace SecretSanta.Web.Api
                         ProcessResponse(client_, response_);
     
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            return;
-                        }
-                        else
                         if (status_ == 204)
                         {
                             return;
@@ -468,6 +468,11 @@ namespace SecretSanta.Web.Api
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 200)
+                        {
+                            return;
                         }
                         else
                         {
