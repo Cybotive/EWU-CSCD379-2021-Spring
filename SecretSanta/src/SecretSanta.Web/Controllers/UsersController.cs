@@ -57,6 +57,10 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             FullUser userToConvert = await Client.GetAsync(id);
+
+            if(userToConvert is null)
+                return NotFound();
+
             UserViewModel userModel = new()
             {
                 Id = userToConvert.Id,

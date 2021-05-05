@@ -8,6 +8,7 @@ using SecretSanta.Web.ViewModels;
 using SecretSanta.Web.Tests.Api;
 using System.Collections.Generic;
 using System;
+using System.Net;
 
 namespace SecretSanta.Web.Tests
 {
@@ -110,7 +111,7 @@ namespace SecretSanta.Web.Tests
         }
 
         [TestMethod]
-        public async Task Create_WithInvalidModel_InvokesPostAsync() // Since ViewModel properties are all nullable
+        public async Task Create_WithInvalidModel_InvokesPostAsync() // Since UserViewModel properties are all nullable
         {
             //Arrange
             HttpClient client = Factory.CreateClient();
@@ -148,6 +149,23 @@ namespace SecretSanta.Web.Tests
             //Assert
             response.EnsureSuccessStatusCode();
             Assert.AreEqual(1, usersClient.GetAsyncInvocationCount);
+        }
+
+        [TestMethod]
+        public async Task Edit_WithInvalidId_RespondsWith404()
+        {
+            //Arrange
+            FullUser user = new() { Id = 909, FirstName = "Place0", LastName = "Holder0" };
+            TestableUsersClient usersClient = Factory.Client;
+            usersClient.GetAsyncFullUser = user;
+
+            HttpClient client = Factory.CreateClient();
+
+            //Act
+            HttpResponseMessage response = await client.GetAsync("/Users/Edit/" + (user.Id - 1));
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
         }
 
         [TestMethod]
