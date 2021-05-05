@@ -50,6 +50,7 @@ namespace SecretSanta.Web.Tests
             {
                 user1, user2
             };
+            int startingInvocation = usersClient.GetAllAsyncInvocationCount;
 
             HttpClient client = Factory.CreateClient();
 
@@ -58,7 +59,25 @@ namespace SecretSanta.Web.Tests
 
             //Assert
             response.EnsureSuccessStatusCode();
-            Assert.AreEqual(1, usersClient.GetAllAsyncInvocationCount);
+            Assert.AreEqual(startingInvocation + 1, usersClient.GetAllAsyncInvocationCount);
+        }
+
+        [TestMethod]
+        public async Task Index_WithoutUsers_InvokesGetAllAsync()
+        {
+            //Arrange
+            TestableUsersClient usersClient = Factory.Client;
+            usersClient.GetAllUsersReturnValue = new List<FullUser>();
+            int startingInvocation = usersClient.GetAllAsyncInvocationCount;
+
+            HttpClient client = Factory.CreateClient();
+
+            //Act
+            HttpResponseMessage response = await client.GetAsync("/Users");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(startingInvocation + 1, usersClient.GetAllAsyncInvocationCount);
         }
 
         [TestMethod]
@@ -67,6 +86,7 @@ namespace SecretSanta.Web.Tests
             //Arrange
             HttpClient client = Factory.CreateClient();
             TestableUsersClient usersClient = Factory.Client;
+            int startingInvocation = usersClient.PostAsyncInvocationCount;
 
             string _TestFirstName = "CWVM";
             string _TestLastName = "IPA";
@@ -83,10 +103,33 @@ namespace SecretSanta.Web.Tests
 
             //Assert
             response.EnsureSuccessStatusCode();
-            Assert.AreEqual(1, usersClient.PostAsyncInvocationCount);
+            Assert.AreEqual(startingInvocation + 1, usersClient.PostAsyncInvocationCount);
             Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
             //Assert.AreEqual(_TestFirstName, usersClient.PostAsyncInvokedParameters[0].FirstName);
             //Assert.AreEqual(_TestLastName, usersClient.PostAsyncInvokedParameters[0].LastName);
+        }
+
+        [TestMethod]
+        public async Task Create_WithInvalidModel_InvokesPostAsync() // Since ViewModel properties are all nullable
+        {
+            //Arrange
+            HttpClient client = Factory.CreateClient();
+            TestableUsersClient usersClient = Factory.Client;
+            int startingInvocation = usersClient.PostAsyncInvocationCount;
+            
+            Dictionary<string, string?> values = new()
+            {
+                { nameof(UserViewModel.Id), null },
+                { nameof(UserViewModel.LastName), null },
+            };
+            FormUrlEncodedContent content = new(values!);
+
+            //Act
+            HttpResponseMessage response = await client.PostAsync("/Users/Create", content);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(startingInvocation + 1, usersClient.PostAsyncInvocationCount);
         }
 
         [TestMethod]
