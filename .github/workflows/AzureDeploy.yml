@@ -26,12 +26,18 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
+        
+    - name: npm install
+      run: npm install
+      
+    - name: npm build
+      run: npm run build:prod
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/binSecretSanta
 
     - name: Run Azure webapp deploy action using publish profile credentials
       uses: azure/webapps-deploy@v2
@@ -39,5 +45,5 @@ jobs:
         app-name: Cybotive-EWU-CSCD379-2021-Spring
         slot-name: Production
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D4A88AAF84D24369A2691A81527B8CEF }}
-        package: ${{env.DOTNET_ROOT}}/myapp
+        package: ${{env.DOTNET_ROOT}}/binSecretSanta
 
