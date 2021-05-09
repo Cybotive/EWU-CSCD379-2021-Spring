@@ -1,9 +1,4 @@
-**Build Status:**
-
 ![](../../workflows/Build/badge.svg)
-
-**Deploy Status:**
-
 ![](../../workflows/Deploy/badge.svg)
  
 # Assignment 6
