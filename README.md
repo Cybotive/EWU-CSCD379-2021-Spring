@@ -1,4 +1,10 @@
-![](../../workflows/AzureDeploy-Cybotive-EWU-CSCD379-2021-Spring/badge.svg)
+**Build Status:**
+
+![](../../workflows/Build/badge.svg)
+
+**Deploy Status:**
+
+![](../../workflows/Deploy/badge.svg)
  
 # Assignment 6
 
