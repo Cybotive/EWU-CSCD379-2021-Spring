@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "build:dev": "webpack --mode development --watch",
-    "build:prod": "export NODE_ENV=production && webpack --mode production"
+    "build:prod": "run-script-os",
+    "build:prod:linux": "export NODE_ENV=production && webpack --mode production",
+    "build:prod:win32": "SET \"NODE_ENV=production\" && webpack --mode production"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +15,7 @@
     "tailwindcss": "2.1.1"
   },
   "devDependencies": {
+    "run-script-os": "1.1.6",
     "@fortawesome/fontawesome-svg-core": "1.2.35",
     "@fortawesome/free-solid-svg-icons": "5.15.3",
     "@fortawesome/free-regular-svg-icons": "5.15.3",
