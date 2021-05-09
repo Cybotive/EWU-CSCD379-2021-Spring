@@ -1,5 +1,5 @@
 ![](../../workflows/Build/badge.svg)
-![](../../workflows/Deploy/badge.svg)
+![DeployTest](../../workflows/Deploy/badge.svg)
  
 # Assignment 6
 
