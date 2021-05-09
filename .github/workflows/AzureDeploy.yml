@@ -32,17 +32,12 @@ jobs:
       
     - name: npm build
       run: npm run build:prod
-      
-    - name: Build api with dotnet
-      working-directory: ./SecretSanta/src/SecretSanta.Api
-      run: dotnet build --configuration Release
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
     - name: dotnet publish
-      working-directory: ./SecretSanta
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/binSecretSanta
+      run: echo "This is dotnet_root ${{env.DOTNET_ROOT}}" & dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/binSecretSanta
 
     - name: Run Azure webapp deploy action using publish profile credentials
       uses: azure/webapps-deploy@v2
