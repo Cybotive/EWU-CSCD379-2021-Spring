@@ -1,4 +1,4 @@
-![](../../workflows/AzureDeploy.yml/badge.svg)
+![](../../workflows/AzureDeploy-Cybotive-EWU-CSCD379-2021-Spring/badge.svg)
  
 # Assignment 6
 
