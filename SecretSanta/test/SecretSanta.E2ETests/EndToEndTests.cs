@@ -46,24 +46,20 @@ namespace SecretSanta.E2ETests
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Firefox.LaunchAsync(new LaunchOptions
             {
-                Headless = true
+                Headless = false
             });
 
             var page = await browser.NewPageAsync();
             var response = await page.GoToAsync(localhost);
 
             Assert.IsTrue(response.Ok);
-
-            //page.ScreenshotAsync("usersBefore.png");
             
             await Task.WhenAll(
                 Task.Run(
                     async () => { response = await page.WaitForNavigationAsync(); }), 
                 page.ClickAsync("text=Users"));
 
-            page.ScreenshotAsync("users.png");
-
-            Assert.IsTrue(response.Ok); // Asserts that we navigated
+            Assert.IsTrue(response.Ok); // This fails because the port for the API is hard coded. It doesn't ever hit the API in WebHostServerFixture.
             
             // If site was complete then the below code would be the check
             /*string userPageTitle = await page.GetTitleAsync();
