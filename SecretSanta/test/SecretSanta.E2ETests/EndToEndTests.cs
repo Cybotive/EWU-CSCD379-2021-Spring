@@ -6,7 +6,7 @@ namespace SecretSanta.E2ETests
     public class EndToEndTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public async Task LandOnHomepage()
         {
             
         }
