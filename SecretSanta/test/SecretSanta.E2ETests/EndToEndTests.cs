@@ -13,9 +13,17 @@ namespace SecretSanta.E2ETests
     [TestClass]
     public class EndToEndTests
     {
+        private static WebHostServerFixture<SecretSanta.Web.Startup, SecretSanta.Api.Startup> Server;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext) {
+            Server = new();
+        }
+
         [TestMethod]
         public async Task LandOnHomepage()
         {
+            var localhost = Server.WebRootUri.AbsoluteUri.Replace("127.0.0.1", "localhost");
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Firefox.LaunchAsync(new LaunchOptions
             {
@@ -23,7 +31,7 @@ namespace SecretSanta.E2ETests
             });
 
             var page = await browser.NewPageAsync();
-            var response = await page.GoToAsync("https://localhost:5001");
+            var response = await page.GoToAsync(localhost);
 
             Assert.IsTrue(response.Ok);
 
