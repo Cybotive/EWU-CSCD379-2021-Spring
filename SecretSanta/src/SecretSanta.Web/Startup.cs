@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SecretSanta.Web.Api;
@@ -10,6 +11,17 @@ namespace SecretSanta.Web
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+        public System.Net.Http.HttpClient ApiClient { get; }
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+            ApiClient = new()
+            {
+                BaseAddress = new Uri(Configuration["ApiHost"])
+            };
+        }
+        
         private static HttpClient UsersHttpClient { get; } = new()
         {
             BaseAddress = new Uri("https://localhost:5101/")
