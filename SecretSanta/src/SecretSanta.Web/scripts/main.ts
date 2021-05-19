@@ -66,7 +66,8 @@ export function createOrUpdateUser() {
 
         async create() {
             try {
-
+                await axios.post(`${apiHost}/api/users`, this.user);
+                window.location.href="/users";
             } catch (error) {
                 console.log(error);
             }

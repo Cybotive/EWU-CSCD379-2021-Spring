@@ -12,6 +12,15 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
+            int newId = 0;
+
+            while (MockData.Users.ContainsKey(newId))
+            {
+                newId++;
+            }
+            
+            item.Id = newId;
+
             MockData.Users[item.Id] = item;
             return item;
         }
