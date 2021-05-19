@@ -75,7 +75,8 @@ export function createOrUpdateUser() {
 
         async update() {
             try {
-
+                await axios.put(`${apiHost}/api/users/${this.user.id}`, this.user);
+                window.location.href="/users";
             } catch (error) {
                 console.log(error);
             }
@@ -83,7 +84,12 @@ export function createOrUpdateUser() {
 
         async loadData() {
             try {
+                const pathSplit = window.location.pathname.split('/');
+                const id = pathSplit[pathSplit.length - 1];
 
+                const response = await axios.get(`${apiHost}/api/users/${id}`);
+
+                this.user = response.data;
             } catch (error) {
                 console.log(error);
             }
