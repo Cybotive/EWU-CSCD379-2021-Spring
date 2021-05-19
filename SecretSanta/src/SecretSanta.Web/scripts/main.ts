@@ -37,19 +37,52 @@ export function setupNav() {
 export function setupUsers() {
     return {
         users: [] as User[],
+
         async mounted() {
             await this.loadUsers();
         },
+
         async deleteUser(currentUser: User) {
             if (confirm(`Are you sure you want to delete ${currentUser.firstName} ${currentUser.lastName}`)) {
                 await axios.delete(`${apiHost}/api/users/${currentUser.id}`);
                 await this.loadUsers();
             }
         },
+
         async loadUsers() {
             try {
                 const response = await axios.get(`${apiHost}/api/users`);
                 this.users = response.data;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+}
+
+export function createOrUpdateUser() {
+    return {
+        user: {} as User,
+
+        async create() {
+            try {
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async update() {
+            try {
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async loadData() {
+            try {
+
             } catch (error) {
                 console.log(error);
             }
