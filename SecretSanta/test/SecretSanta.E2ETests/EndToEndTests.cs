@@ -126,13 +126,15 @@ namespace SecretSanta.E2ETests
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Firefox.LaunchAsync(new LaunchOptions
             {
-                Headless = false
+                Headless = true
             });
 
             var page = await browser.NewPageAsync();
             var response = await page.GoToAsync(localhost + "Gifts");
 
             Assert.IsTrue(response.Ok);
+
+            await page.WaitForSelectorAsync("//html/body/section/section/section/a/section/div");
 
             var giftsBefore = await page.QuerySelectorAllAsync("//html/body/section/section/section/a/section/div");
             
@@ -150,6 +152,34 @@ namespace SecretSanta.E2ETests
             Assert.IsTrue(giftsBefore.Count() + 1 == giftsAfter.Count());
         }
 
-        //var giftContent = await page.GetTextContentAsync("//html/body/section/section/section[last()]/a/section/div");
+        [TestMethod]
+        public async Task DeleteGift()
+        {
+            var localhost = Server.WebRootUri.AbsoluteUri.Replace("127.0.0.1", "localhost");
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Firefox.LaunchAsync(new LaunchOptions
+            {
+                Headless = true
+            });
+
+            var page = await browser.NewPageAsync();
+            var response = await page.GoToAsync(localhost + "Gifts");
+
+            Assert.IsTrue(response.Ok);
+
+            await page.WaitForSelectorAsync("//html/body/section/section/section/a/section/div");
+            
+            var giftsBefore = await page.QuerySelectorAllAsync("//html/body/section/section/section/a/section/div");
+
+            Assert.IsTrue(giftsBefore.Count() > 0, "No existing Gifts to delete");
+            
+            page.Dialog += (_, args) => args.Dialog.AcceptAsync();
+            await page.ClickAsync("//html/body/section/section/section[last()]/a/section/form/button");
+
+            var giftsAfter = await page.QuerySelectorAllAsync("//html/body/section/section/section/a/section/div");
+
+            Assert.IsTrue(giftsBefore.Count() - 1 == giftsAfter.Count());
+        }
+        
     }
 }
