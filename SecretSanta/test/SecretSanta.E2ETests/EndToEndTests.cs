@@ -153,6 +153,37 @@ namespace SecretSanta.E2ETests
         }
 
         [TestMethod]
+        public async Task ModifyGift()
+        {
+            var localhost = Server.WebRootUri.AbsoluteUri.Replace("127.0.0.1", "localhost");
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Firefox.LaunchAsync(new LaunchOptions
+            {
+                Headless = true
+            });
+
+            var _newTitle = "Junk Title kjbn234nj234kjkj3ufwer";
+
+            var page = await browser.NewPageAsync();
+            var response = await page.GoToAsync(localhost + "Gifts");
+
+            Assert.IsTrue(response.Ok);
+
+            await page.WaitForSelectorAsync("//html/body/section/section/section/a/section/div");
+            
+            await page.ClickAsync("//html/body/section/section/section[last()]/a/section/div");
+
+            IElementHandle elementHandle = await page.QuerySelectorAsync("input#Title");
+            await elementHandle.FillAsync(_newTitle);
+
+            await page.ClickAsync("text=Update");
+
+            string titleAfterUpdate = await page.GetTextContentAsync("//html/body/section/section/section[last()]/a/section/div");
+
+            Assert.AreEqual(_newTitle, titleAfterUpdate);
+        }
+
+        [TestMethod]
         public async Task DeleteGift()
         {
             var localhost = Server.WebRootUri.AbsoluteUri.Replace("127.0.0.1", "localhost");
