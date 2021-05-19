@@ -119,5 +119,37 @@ namespace SecretSanta.E2ETests
             /*string userPageTitle = await page.GetTitleAsync();
             Assert.IsTrue(userPageTitle.Contains("User"));*/
         }
+
+        [TestMethod]
+        public async Task CreateGift(){
+            var localhost = Server.WebRootUri.AbsoluteUri.Replace("127.0.0.1", "localhost");
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Firefox.LaunchAsync(new LaunchOptions
+            {
+                Headless = false
+            });
+
+            var page = await browser.NewPageAsync();
+            var response = await page.GoToAsync(localhost + "Gifts");
+
+            Assert.IsTrue(response.Ok);
+
+            var giftsBefore = await page.QuerySelectorAllAsync("//html/body/section/section/section/a/section/div");
+            
+            await page.ClickAsync("text=Create");
+
+            await page.TypeAsync("input#Title", "CreatedGift");
+            await page.TypeAsync("input#Description", "This is from an E2E test run");
+            await page.TypeAsync("input#Priority", "1");
+            await page.SelectOptionAsync("select#UserId", new string[]{ "1" });
+
+            await page.ClickAsync("text=Create");
+
+            var giftsAfter = await page.QuerySelectorAllAsync("//html/body/section/section/section/a/section/div");
+
+            Assert.IsTrue(giftsBefore.Count() + 1 == giftsAfter.Count());
+        }
+
+        //var giftContent = await page.GetTextContentAsync("//html/body/section/section/section[last()]/a/section/div");
     }
 }
