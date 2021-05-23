@@ -73,5 +73,14 @@ namespace SecretSanta.Business
 
             throw new NotImplementedException();
         }
+
+        private User? GetRandomUser(Group group)
+        {
+            if (group is null || group.Users.Count <= 0 ) { return null; }
+            
+            User user = group.Users[random.Next(group.Users.Count - 1)];
+
+            return user;
+        }
     }
 }
