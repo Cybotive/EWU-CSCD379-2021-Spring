@@ -74,11 +74,11 @@ namespace SecretSanta.Business
             throw new NotImplementedException();
         }
 
-        private User? GetRandomUser(Group group)
+        private User? GetRandomUser()
         {
-            if (group is null || group.Users.Count <= 0 ) { return null; }
+            if (MockData.Users.Count <= 0 ) { return null; }
             
-            User user = group.Users[random.Next(group.Users.Count - 1)];
+            User user = MockData.Users[random.Next(MockData.Users.Count - 1)];
 
             return user;
         }
