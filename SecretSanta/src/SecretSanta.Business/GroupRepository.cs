@@ -45,5 +45,14 @@ namespace SecretSanta.Business
 
             MockData.Groups[item.Id] = item;
         }
+
+        /*
+        * A group with with 2 or fewer users should result in an error. This error should be displayed to a user.
+        * A user is not allowed to be both the Giver and Recipient of the assignment.
+        */
+        public AssignmentResult GenerateAssignments(int v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
