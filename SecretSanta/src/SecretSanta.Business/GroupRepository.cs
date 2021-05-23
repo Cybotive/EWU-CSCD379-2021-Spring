@@ -19,9 +19,9 @@ namespace SecretSanta.Business
 
         public Group? GetItem(int id)
         {
-            if (MockData.Groups.TryGetValue(id, out Group? user))
+            if (MockData.Groups.TryGetValue(id, out Group? group))
             {
-                return user;
+                return group;
             }
             return null;
         }
@@ -50,8 +50,22 @@ namespace SecretSanta.Business
         * A group with with 2 or fewer users should result in an error. This error should be displayed to a user.
         * A user is not allowed to be both the Giver and Recipient of the assignment.
         */
-        public AssignmentResult GenerateAssignments(int v)
+        public AssignmentResult GenerateAssignments(int groupId, Random random)
         {
+            if (random is null) { return AssignmentResult.Error(nameof(random) + " may not be null."); }
+
+            if(MockData.Groups.TryGetValue(groupId, out Group? group))
+            {
+                if (group is null) { return AssignmentResult.Error(nameof(group) + " may not be null."); }
+                
+                List<User> users = group.Users;
+
+                if (users.Count <= 2)
+                {
+
+                }
+            }
+
             throw new NotImplementedException();
         }
     }
