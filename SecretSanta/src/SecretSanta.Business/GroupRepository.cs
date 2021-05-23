@@ -6,7 +6,7 @@ namespace SecretSanta.Business
 {
     public class GroupRepository : IGroupRepository
     {
-        private Random random { get; }
+        private Random random { get; } = new(); // Replaced by constructor.
 
         public GroupRepository(Random random)
         {
@@ -57,7 +57,7 @@ namespace SecretSanta.Business
         * A group with with 2 or fewer users should result in an error. This error should be displayed to a user.
         * A user is not allowed to be both the Giver and Recipient of the assignment.
         */
-        // Algorithm Description: Start with an array of users. Incrementing from index 0, randomly select index greater than current index to conceptually swap.
+        // Algorithm Description: Start with an array of user indexes (relative to group.Users). Incrementing from index 0, randomly select index greater than current index to swap.
         public AssignmentResult GenerateAssignments(int groupId)
         {
             if(MockData.Groups.TryGetValue(groupId, out Group? group))
@@ -65,20 +65,26 @@ namespace SecretSanta.Business
                 if (group is null) { return AssignmentResult.Error(nameof(group) + " may not be null."); }
                 
                 List<User> users = group.Users;
-                List<Assignment> tempAssignments = new();
+                if (users.Count <= 2) { return AssignmentResult.Error("Not enough users in group (3+ required)."); }
 
-                if (users.Count <= 2)
+                List<Assignment> tempAssignments = new();
+                int[] recipientIndexes = new int[users.Count];
+                
+                for (int i = 0; i < recipientIndexes.Length; i++)
                 {
-                    return AssignmentResult.Error("Not enough users in group (3+ required).");
+                    recipientIndexes[i] = i;
                 }
 
-                for (int i = 0; i < users.Count - 1; i++) // -1 to exclude last user
+                for (int i = 0; i < users.Count - 1; i++) // -1 to exclude last user (will be included indirectly via swap).
                 {
-                    User? recipient = GetRandomUserRightOfIndex(i);
-                    if (recipient is null) { return AssignmentResult.Error("Invalid recipient."); } // May not want the user to know this, but I do for this assignment.
+                    int indexToSwap = GetRandomUserIndexRightOfIndex(i);
+                    recipientIndexes[indexToSwap] = i;
+                    recipientIndexes[i] = indexToSwap;
+                }
 
-                    Assignment assignment = new(users[i], recipient);
-                    //group.Assignments.Add(assignment);
+                for (int i = 0; i < recipientIndexes.Length; i++)
+                {
+                    Assignment assignment = new(users[i], users[recipientIndexes[i]]);
                     tempAssignments.Add(assignment);
                 }
 
@@ -89,6 +95,8 @@ namespace SecretSanta.Business
                         return AssignmentResult.Error("Unable to generate Secret Santa assignments.");
                     }
                 }
+
+                return AssignmentResult.Success();
             }
 
             return AssignmentResult.Error("Group not found.");
@@ -105,7 +113,7 @@ namespace SecretSanta.Business
             return user;
         }*/
 
-        private User? GetRandomUserRightOfIndex(int index)
+        /*private User? GetRandomUserRightOfIndex(int index)
         {
             if (index >= MockData.Users.Count )
             {
@@ -118,6 +126,18 @@ namespace SecretSanta.Business
             
             User user = MockData.Users[random.Next(index + 1, MockData.Users.Count - 1)];
             return user;
+        }*/
+
+        private int GetRandomUserIndexRightOfIndex(int index)
+        {
+            if (index >= MockData.Users.Count )
+            {
+                throw new IndexOutOfRangeException(
+                    String.Format("No users right of current index. Current Index: {0}. Max Index: {1}.", index, MockData.Users.Count - 1)
+                );
+            }
+            
+            return random.Next(index + 1, MockData.Users.Count);
         }
     }
 }
