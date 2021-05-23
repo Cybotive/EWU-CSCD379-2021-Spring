@@ -6,6 +6,13 @@ namespace SecretSanta.Business
 {
     public class GroupRepository : IGroupRepository
     {
+        private Random random { get; }
+
+        public GroupRepository(Random random)
+        {
+            random = random ?? throw new ArgumentNullException(nameof(random));
+        }
+
         public Group Create(Group item)
         {
             if (item is null)
@@ -50,10 +57,8 @@ namespace SecretSanta.Business
         * A group with with 2 or fewer users should result in an error. This error should be displayed to a user.
         * A user is not allowed to be both the Giver and Recipient of the assignment.
         */
-        public AssignmentResult GenerateAssignments(int groupId, Random random)
+        public AssignmentResult GenerateAssignments(int groupId)
         {
-            if (random is null) { return AssignmentResult.Error(nameof(random) + " may not be null."); }
-
             if(MockData.Groups.TryGetValue(groupId, out Group? group))
             {
                 if (group is null) { return AssignmentResult.Error(nameof(group) + " may not be null."); }
