@@ -96,6 +96,7 @@ namespace SecretSanta.Business
                     }
                 }
 
+                group.Assignments.AddRange(tempAssignments);
                 return AssignmentResult.Success();
             }
 
