@@ -52,7 +52,8 @@ namespace SecretSanta.Business
 
             MockData.Groups[item.Id] = item;
         }
-
+        
+        // TODO: Use returned result to display error to user.
         // Algorithm Description: Start with an array of user indexes (relative to group.Users). Incrementing from index 0, randomly select index greater than current index to swap.
         public AssignmentResult GenerateAssignments(int groupId)
         {
@@ -90,11 +91,13 @@ namespace SecretSanta.Business
                 {
                     if (assign.Giver == assign.Receiver) // Equal by reference is intentional.
                     {
-                        return AssignmentResult.Error("Unable to generate Secret Santa assignments.");
+                        return AssignmentResult.Error("Unable to generate assignments.");
                     }
                 }
-
+                
+                group.Assignments.Clear(); // Clear in case of multiple runs
                 group.Assignments.AddRange(tempAssignments);
+
                 return AssignmentResult.Success();
             }
 
