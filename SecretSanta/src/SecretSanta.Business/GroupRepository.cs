@@ -6,11 +6,11 @@ namespace SecretSanta.Business
 {
     public class GroupRepository : IGroupRepository
     {
-        private Random random { get; } = new(); // Replaced by constructor.
+        private Random Random { get; } = new(); // Replaced by constructor.
 
         public GroupRepository(Random random)
         {
-            random = random ?? throw new ArgumentNullException(nameof(random));
+            Random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
         public Group Create(Group item)
@@ -65,7 +65,7 @@ namespace SecretSanta.Business
                 List<Assignment> tempAssignments = new();
                 
                 // GRADER: A group with with 2 or fewer users should result in an error.
-                if (users.Count <= 2) { return AssignmentResult.Error("Not enough users in group (3+ required)"); }
+                if (users.Count <= 2) { return AssignmentResult.Error($"Group {group.Name} must have at least three users"); }
 
                 int[] recipientIndexes = new int[users.Count];
                 for (int i = 0; i < recipientIndexes.Length; i++)
@@ -75,9 +75,11 @@ namespace SecretSanta.Business
 
                 for (int i = 0; i < users.Count - 1; i++) // -1 to exclude last user (will be included indirectly via swap).
                 {
-                    int indexToSwap = GetRandomUserIndexRightOfIndex(i);
-                    recipientIndexes[indexToSwap] = i;
-                    recipientIndexes[i] = indexToSwap;
+                    int indexToSwap = Random.Next(i + 1, recipientIndexes.Length);
+
+                    int temp = recipientIndexes[indexToSwap];
+                    recipientIndexes[indexToSwap] = recipientIndexes[i];
+                    recipientIndexes[i] = temp;
                 }
 
                 for (int i = 0; i < recipientIndexes.Length; i++)
@@ -113,7 +115,7 @@ namespace SecretSanta.Business
                 );
             }
             
-            return random.Next(index + 1, MockData.Users.Count);
+            return Random.Next(index + 1, MockData.Users.Count);
         }
     }
 }

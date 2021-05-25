@@ -119,7 +119,7 @@ namespace SecretSanta.Business.Tests
         {
             GroupRepository sut = new(Random);
 
-            AssignmentResult result = sut.GenerateAssignments(42);
+            AssignmentResult result = sut.GenerateAssignments(82); // 42 was valid in full test run
 
             Assert.AreEqual("Group not found", result.ErrorMessage);
         }
