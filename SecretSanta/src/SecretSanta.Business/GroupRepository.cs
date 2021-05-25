@@ -59,13 +59,13 @@ namespace SecretSanta.Business
         {
             if(MockData.Groups.TryGetValue(groupId, out Group? group))
             {
-                if (group is null) { return AssignmentResult.Error(nameof(group) + " may not be null."); }
+                if (group is null) { return AssignmentResult.Error(nameof(group) + " may not be null"); }
                 
                 List<User> users = group.Users;
                 List<Assignment> tempAssignments = new();
                 
                 // GRADER: A group with with 2 or fewer users should result in an error.
-                if (users.Count <= 2) { return AssignmentResult.Error("Not enough users in group (3+ required)."); }
+                if (users.Count <= 2) { return AssignmentResult.Error("Not enough users in group (3+ required)"); }
 
                 int[] recipientIndexes = new int[users.Count];
                 for (int i = 0; i < recipientIndexes.Length; i++)
@@ -91,7 +91,7 @@ namespace SecretSanta.Business
                 {
                     if (assign.Giver == assign.Receiver) // Equal by reference is intentional.
                     {
-                        return AssignmentResult.Error("Unable to generate assignments.");
+                        return AssignmentResult.Error("Unable to generate assignments");
                     }
                 }
                 
@@ -101,7 +101,7 @@ namespace SecretSanta.Business
                 return AssignmentResult.Success();
             }
 
-            return AssignmentResult.Error("Group not found.");
+            return AssignmentResult.Error("Group not found");
         }
 
         private int GetRandomUserIndexRightOfIndex(int index)
@@ -109,7 +109,7 @@ namespace SecretSanta.Business
             if (index >= MockData.Users.Count )
             {
                 throw new IndexOutOfRangeException(
-                    String.Format("No users right of current index. Current Index: {0}. Max Index: {1}.", index, MockData.Users.Count - 1)
+                    String.Format("No users right of current index. Current Index: {0} | Max Index: {1}", index, MockData.Users.Count - 1)
                 );
             }
             
