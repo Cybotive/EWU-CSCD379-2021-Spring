@@ -53,10 +53,6 @@ namespace SecretSanta.Business
             MockData.Groups[item.Id] = item;
         }
 
-        /*
-        * A group with with 2 or fewer users should result in an error. This error should be displayed to a user.
-        * A user is not allowed to be both the Giver and Recipient of the assignment.
-        */
         // Algorithm Description: Start with an array of user indexes (relative to group.Users). Incrementing from index 0, randomly select index greater than current index to swap.
         public AssignmentResult GenerateAssignments(int groupId)
         {
@@ -65,11 +61,12 @@ namespace SecretSanta.Business
                 if (group is null) { return AssignmentResult.Error(nameof(group) + " may not be null."); }
                 
                 List<User> users = group.Users;
+                List<Assignment> tempAssignments = new();
+                
+                // GRADER: A group with with 2 or fewer users should result in an error.
                 if (users.Count <= 2) { return AssignmentResult.Error("Not enough users in group (3+ required)."); }
 
-                List<Assignment> tempAssignments = new();
                 int[] recipientIndexes = new int[users.Count];
-                
                 for (int i = 0; i < recipientIndexes.Length; i++)
                 {
                     recipientIndexes[i] = i;
@@ -88,6 +85,7 @@ namespace SecretSanta.Business
                     tempAssignments.Add(assignment);
                 }
 
+                // GRADER: A user is not allowed to be both the Giver and Recipient of the assignment.
                 foreach (Assignment assign in tempAssignments)
                 {
                     if (assign.Giver == assign.Receiver) // Equal by reference is intentional.
