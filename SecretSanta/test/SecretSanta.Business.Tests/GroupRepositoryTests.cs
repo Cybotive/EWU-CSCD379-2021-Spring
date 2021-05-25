@@ -9,11 +9,13 @@ namespace SecretSanta.Business.Tests
     [TestClass]
     public class GroupRepositoryTests
     {
+        private static Random Random { get; } = new();
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_NullItem_ThrowsArgumentException()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
 
             sut.Create(null!);
         }
@@ -21,7 +23,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void Create_WithItem_CanGetItem()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
             Group user = new()
             {
                 Id = 42
@@ -36,7 +38,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void GetItem_WithBadId_ReturnsNull()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
 
             Group? user = sut.GetItem(-1);
 
@@ -46,7 +48,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void GetItem_WithValidId_ReturnsGroup()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
             sut.Create(new() 
             { 
                 Id = 42,
@@ -62,7 +64,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void List_WithGroups_ReturnsAllGroup()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
             sut.Create(new()
             {
                 Id = 42,
@@ -83,7 +85,7 @@ namespace SecretSanta.Business.Tests
         [DataRow(42, true)]
         public void Remove_WithInvalidId_ReturnsTrue(int id, bool expected)
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
             sut.Create(new()
             {
                 Id = 42,
@@ -97,7 +99,7 @@ namespace SecretSanta.Business.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Save_NullItem_ThrowsArgumentException()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
 
             sut.Save(null!);
         }
@@ -105,7 +107,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void Save_WithValidItem_SavesItem()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
 
             sut.Save(new Group() { Id = 42 });
 
@@ -115,7 +117,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void GenerateAssignments_WithInvalidId_ReturnsError()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
 
             AssignmentResult result = sut.GenerateAssignments(42);
 
@@ -125,7 +127,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void GenerateAssignments_WithLessThanThreeUsers_ReturnsError()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
             sut.Create(new()
             {
                 Id = 42,
@@ -140,7 +142,7 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void GenerateAssignments_WithValidGroup_CreatesAssignments()
         {
-            GroupRepository sut = new();
+            GroupRepository sut = new(Random);
             Group group = sut.Create(new()
             {
                 Id = 42,
