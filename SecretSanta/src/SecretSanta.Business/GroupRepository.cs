@@ -102,32 +102,6 @@ namespace SecretSanta.Business
             return AssignmentResult.Error("Group not found.");
         }
 
-        /*private User? GetRandomUser()
-        {
-            if (MockData.Users.Count <= 0 ) { return null; }
-
-            Random random = new();
-            
-            User user = MockData.Users[random.Next(MockData.Users.Count - 1)];
-
-            return user;
-        }*/
-
-        /*private User? GetRandomUserRightOfIndex(int index)
-        {
-            if (index >= MockData.Users.Count )
-            {
-                throw new IndexOutOfRangeException(
-                    String.Format("No users right of current index. Current Index: {0}. Max Index: {1}.", index, MockData.Users.Count - 1)
-                );
-            }
-            
-            Random random = new();
-            
-            User user = MockData.Users[random.Next(index + 1, MockData.Users.Count - 1)];
-            return user;
-        }*/
-
         private int GetRandomUserIndexRightOfIndex(int index)
         {
             if (index >= MockData.Users.Count )
