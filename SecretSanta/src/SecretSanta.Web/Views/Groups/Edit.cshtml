@@ -11,11 +11,11 @@
     <div class="mb-6" x-show="isEditing == false">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-                <label class="text-gray-500 font-bold text-right" for="Name">Name:</label>
+                <label class="text-gray-600 font-bold text-right" for="Name">Name:</label>
                 <span x-text="group.name"></span>
                 <button class="border-1 bg-green-200 border-green-600 hover:bg-green-400 py-2 px-4 rounded-xl mr-3" @@click="edit()">Edit</button>
                 <button class="border-1 bg-green-200 border-green-600 hover:bg-green-400 py-2 px-4 rounded-xl mr-3" @@click="generateAssignments(`${group.id}`)">Generate Assignments</button>
-                <span x-text="generationError"></span>
+                <span x-text="generationError" class="text-red-500"></span>
             </div>
         </div>
     </div>
