@@ -209,8 +209,8 @@ namespace SecretSanta.Business.Tests
             Assert.IsTrue(resultFirst.IsSuccess);
             Assert.AreEqual(3, groupFirst.Assignments.Count);
             Assert.AreEqual(3, groupSecond.Assignments.Count);
-            Assert.AreEqual(groupFirst, groupSecond);
-            Assert.AreNotEqual(groupFirst, groupOther);
+            Assert.AreEqual(groupFirst.Assignments, groupSecond.Assignments);
+            Assert.AreNotEqual(groupFirst.Assignments, groupOther.Assignments);
         }
     }
 }
