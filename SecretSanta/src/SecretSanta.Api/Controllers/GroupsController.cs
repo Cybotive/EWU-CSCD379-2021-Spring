@@ -23,7 +23,7 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         public IEnumerable<Dto.Group> Get()
         {
-            return GroupRepository.List().Select(x => Dto.Group.ToDto(x)!);
+            return GroupRepository.List().Select(x => Dto.Group.ToDto(x, true)!);
         }
 
         [HttpGet("{id}")]
