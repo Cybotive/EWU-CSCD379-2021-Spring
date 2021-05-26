@@ -200,11 +200,11 @@ export function createOrUpdateGroup() {
             }
             await this.loadData();
         },
-        async getAssignment(currentUser: User) {
+        getAssignment(currentUser: User) {
             try {
                 var client = new GroupsClient(apiHost);
-                var assignment = this.group.assignments.find(x => x.giver == currentUser);
-                return assignment?.receiver;
+                var assignment = this.group.assignments.find(x => x.giver?.id == currentUser.id);
+                return `${assignment?.receiver?.firstName} ${assignment?.receiver?.lastName}`;
             } catch (error) {
                 console.log(error);
             }
