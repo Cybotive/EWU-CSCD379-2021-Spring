@@ -198,6 +198,16 @@ export function createOrUpdateGroup() {
                 this.generationError = error;
                 console.log(error);
             }
+            await this.loadData();
+        },
+        async getAssignment(currentUser: User) {
+            try {
+                var client = new GroupsClient(apiHost);
+                var assignment = this.group.assignments.find(x => x.giver == currentUser);
+                return assignment?.receiver;
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }
