@@ -13,6 +13,9 @@ namespace SecretSanta.Business
             Random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
+        public GroupRepository()
+        {}
+
         public Group Create(Group item)
         {
             if (item is null)
