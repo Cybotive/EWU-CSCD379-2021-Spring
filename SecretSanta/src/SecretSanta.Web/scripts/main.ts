@@ -189,6 +189,15 @@ export function createOrUpdateGroup() {
                 console.log(error);
             }
             await this.loadGroup();
+        },
+        async generateAssignments(currentGroupId: number) {
+            try {
+                var client = new GroupsClient(apiHost);
+                await client.generateAssignments(currentGroupId);
+            } catch (error) {
+                this.generationError = error;
+                console.log(error);
+            }
         }
     }
 }
