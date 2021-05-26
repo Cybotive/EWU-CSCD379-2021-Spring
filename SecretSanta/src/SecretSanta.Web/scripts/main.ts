@@ -203,6 +203,9 @@ export function createOrUpdateGroup() {
         getAssignment(currentUser: User) {
             try {
                 var assignment = this.group.assignments.find(x => x.giver?.id == currentUser.id);
+                if(assignment?.receiver === undefined){
+                    return "(Unassigned)"
+                }
                 return `${assignment?.receiver?.firstName} ${assignment?.receiver?.lastName}`;
             } catch (error) {
                 console.log(error);
