@@ -469,7 +469,7 @@ export class GroupsClient implements IGroupsClient {
             const _responseText = response.data;
             let result404: any = null;
             let resultData404  = _responseText;
-            result404 = ProblemDetails.fromJS(resultData404);
+            result404 = resultData404 !== undefined ? resultData404 : <any>null;
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
         } else if (status === 204) {
             const _responseText = response.data;

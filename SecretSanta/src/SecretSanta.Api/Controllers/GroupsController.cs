@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using SecretSanta.Business;
@@ -111,7 +112,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{id}/generateAssignments")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public ActionResult GenerateAssignments(int id)
         {

@@ -202,7 +202,6 @@ export function createOrUpdateGroup() {
         },
         getAssignment(currentUser: User) {
             try {
-                var client = new GroupsClient(apiHost);
                 var assignment = this.group.assignments.find(x => x.giver?.id == currentUser.id);
                 return `${assignment?.receiver?.firstName} ${assignment?.receiver?.lastName}`;
             } catch (error) {
