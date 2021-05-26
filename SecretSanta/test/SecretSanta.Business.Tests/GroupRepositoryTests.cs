@@ -160,5 +160,57 @@ namespace SecretSanta.Business.Tests
             Assert.AreEqual(3, group.Assignments.Select(x => x.Receiver.FirstName).Distinct().Count());
             Assert.IsFalse(group.Assignments.Any(x => x.Giver.FirstName == x.Receiver.FirstName));
         }
+
+        [TestMethod]
+        public void GenerateAssignments_GivenRandom_UsesInstance()
+        {
+            Random providedRandomFirst = new(42);
+            Random providedRandomOther = new(82);
+
+            GroupRepository sutFirst = new(providedRandomFirst);
+            Group groupFirst = sutFirst.Create(new()
+            {
+                Id = 42,
+                Name = "Group"
+            });
+            groupFirst.Users.Add(new User { FirstName = "John", LastName = "Doe" });
+            groupFirst.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
+            groupFirst.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
+
+            AssignmentResult resultFirst = sutFirst.GenerateAssignments(42);
+            List<Assignment> assignFirst = groupFirst.Assignments;
+
+            GroupRepository sutSecond = new(providedRandomFirst);
+            Group groupSecond = sutSecond.Create(new()
+            {
+                Id = 42,
+                Name = "Group"
+            });
+            groupSecond.Users.Add(new User { FirstName = "John", LastName = "Doe" });
+            groupSecond.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
+            groupSecond.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
+
+            AssignmentResult resultSecond = sutSecond.GenerateAssignments(42);
+            List<Assignment> assignSecond = groupSecond.Assignments;
+
+            GroupRepository sutOther = new(providedRandomOther);
+            Group groupOther = sutOther.Create(new()
+            {
+                Id = 42,
+                Name = "Group"
+            });
+            groupOther.Users.Add(new User { FirstName = "John", LastName = "Doe" });
+            groupOther.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
+            groupOther.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
+
+            AssignmentResult resultOther = sutOther.GenerateAssignments(42);
+            List<Assignment> assignThird = groupOther.Assignments;
+
+            Assert.IsTrue(resultFirst.IsSuccess);
+            Assert.AreEqual(3, groupFirst.Assignments.Count);
+            Assert.AreEqual(3, groupSecond.Assignments.Count);
+            Assert.AreEqual(groupFirst, groupSecond);
+            Assert.AreNotEqual(groupFirst, groupOther);
+        }
     }
 }
