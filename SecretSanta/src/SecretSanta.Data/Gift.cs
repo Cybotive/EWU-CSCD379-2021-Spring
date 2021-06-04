@@ -9,6 +9,6 @@ namespace SecretSanta.Data
         public string? Description { get; set; } = "";
         public string? Url { get; set; } = "";
         public int Priority { get; set; }
-        public User User { get; set; }
+        public User? Recipient { get; set; }
     }
 }

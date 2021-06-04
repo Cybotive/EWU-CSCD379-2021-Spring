@@ -6,7 +6,6 @@ namespace SecretSanta.Data
     public class SecretSantaContext : DbContext
     {
         public DbSet<User> Users => Set<User>();
-
         public DbSet<Group> Groups => Set<Group>();
         public DbSet<Gift> Gifts => Set<Gift>();
 
