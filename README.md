@@ -1,4 +1,4 @@
-![](""../../workflows/Assignment_Build_Test/badge.svg"")
+![](../../workflows/Assignment_Build_Test/badge.svg)
 ![](../../workflows/Assignment_Deploy/badge.svg)
 
 [**Link to running website**](https://cybotive-ewu-cscd379-2021-spring.azurewebsites.net)
