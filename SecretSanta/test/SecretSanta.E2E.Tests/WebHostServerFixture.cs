@@ -82,6 +82,7 @@ namespace SecretSanta.E2E.Tests
             WebHost?.StopAsync();
             ApiHost?.Dispose();
             ApiHost?.StopAsync();
+            GC.SuppressFinalize(this);
         }
 
         protected abstract IHost CreateWebHost();
@@ -115,7 +116,7 @@ namespace SecretSanta.E2E.Tests
                     .UseStaticWebAssets()
                     .UseStartup<WStartup>()
                     .UseSetting("ApiHost", ApiRootUri.AbsoluteUri.Replace("127.0.0.1", "localhost"))
-                    .UseUrls($"https://127.0.0.1:0")) // :0 allows to choose a port automatically
+                    .UseUrls($"http://127.0.0.1:0")) // :0 allows to choose a port automatically
                 .Build();
         }
 
@@ -141,7 +142,7 @@ namespace SecretSanta.E2E.Tests
                     .UseSolutionRelativeContentRoot(Path.Combine("src", typeof(AStartup).Assembly.GetName().Name))
                     .UseStaticWebAssets()
                     .UseStartup<AStartup>()
-                    .UseUrls($"https://127.0.0.1:0")) // :0 allows to choose a port automatically
+                    .UseUrls($"http://127.0.0.1:0")) // :0 allows to choose a port automatically
                 .Build();
         }
     }

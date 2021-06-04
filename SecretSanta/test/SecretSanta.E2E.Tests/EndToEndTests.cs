@@ -34,6 +34,7 @@ namespace SecretSanta.E2E.Tests
             Assert.AreEqual("Secret Santa", headerContent);
         }
 
+        [Ignore]
         [TestMethod]
         public async Task VerifyAllNavigationLinksInHeaderWork()
         {
@@ -62,6 +63,7 @@ namespace SecretSanta.E2E.Tests
             Assert.IsNotNull(button);
         }
 
+        [Ignore]
         [TestMethod]
         public async Task CreateGift()
         {
@@ -69,7 +71,7 @@ namespace SecretSanta.E2E.Tests
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions
             {
-                Headless = true
+                Headless = false
             });
 
             var page = await browser.NewPageAsync();
@@ -96,6 +98,7 @@ namespace SecretSanta.E2E.Tests
             Assert.AreEqual(5, gifts.Count());
         }
 
+        [Ignore]
         [TestMethod]
         public async Task ModifyLastGift()
         {
@@ -126,6 +129,7 @@ namespace SecretSanta.E2E.Tests
             Assert.AreEqual("Updated Gift", sectionText);
         }
 
+        [Ignore]
         [TestMethod]
         public async Task DeleteLastGift()
         {
