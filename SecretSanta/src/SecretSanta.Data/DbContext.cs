@@ -5,9 +5,10 @@ namespace SecretSanta.Data
 {
     public class SecretSantaContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<Gift> Gifts { get; set; }
+        public DbSet<User> Users => Set<User>();
+
+        public DbSet<Group> Groups => Set<Group>();
+        public DbSet<Gift> Gifts => Set<Gift>();
 
         public SecretSantaContext() : base(new DbContextOptionsBuilder<SecretSantaContext>()
             .UseSqlite("Data Source=main.db").Options)
