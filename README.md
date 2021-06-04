@@ -1,4 +1,11 @@
-﻿# Assignment 9 & 10
+![](""../../workflows/Assignment9-10_Test/badge.svg"")
+![](../../workflows/Assignment9-10_Deploy/badge.svg)
+
+[**Link to running website**](https://cybotive-ewu-cscd379-2021-spring.azurewebsites.net)
+
+[**Link to my branch on my fork**](https://github.com/Cybotive/EWU-CSCD379-2021-Spring/tree/Assignment9)
+
+# Assignment 9 & 10
 
 ## Overview
 
