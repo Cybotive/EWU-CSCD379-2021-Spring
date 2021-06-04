@@ -22,8 +22,15 @@ jobs:
     - name: Get Directory
       run: pwd
       
-    - name: Trust Dev Certificates
-      run: dotnet dev-certs https --trust
+    - name: Export Dev Certificates
+      run: |
+        dir $HOME/.pki/nssdb
+        dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
+      
+    - name: Trust Dev Certificates for Chromium
+      run: |
+        certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i /usr/local/share/ca-certificates/  aspnet/https.crt
+        certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i /usr/local/share/ca-certificates/  aspnet/https.crt
 
     - name: Run Npm Build
       working-directory: ./SecretSanta/src/SecretSanta.Web/
