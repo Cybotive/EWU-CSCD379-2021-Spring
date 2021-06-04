@@ -103,7 +103,7 @@ namespace SecretSanta.E2E.Tests
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions
             {
-                Headless = false
+                Headless = true
             });
 
             var page = await browser.NewPageAsync();
