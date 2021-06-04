@@ -1,4 +1,4 @@
-name: Assignment Build And Test
+name: Assignment_Build_Test
 
 on:
   push:
