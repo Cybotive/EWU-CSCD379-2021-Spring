@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecretSanta.Data;
 
 namespace SecretSanta.Data.Migrations
 {
     [DbContext(typeof(SecretSantaContext))]
-    partial class SecretSantaContextModelSnapshot : ModelSnapshot
+    [Migration("20210606214940_ContextAssignmentRemoveExplicitPropertyModeActuallySaved")]
+    partial class ContextAssignmentRemoveExplicitPropertyModeActuallySaved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,8 +83,6 @@ namespace SecretSanta.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Title");
-
                     b.HasIndex("ReceiverId");
 
                     b.ToTable("Gifts");
@@ -99,8 +99,6 @@ namespace SecretSanta.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Name");
 
                     b.ToTable("Groups");
                 });

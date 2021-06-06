@@ -1,23 +1,28 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecretSanta.Data
 {
     public class Assignment
     {
         public int Id { get; set; }
-        public User Giver { get; }
-        public User Receiver { get; }
+        public User Giver { get; private set; }
+        public User Receiver { get; private set; }
 
-        public Assignment(User giver, User recipient)
+        public Assignment(User giver, User receiver)
         {
             Giver = giver ?? throw new ArgumentNullException(nameof(giver));
-            Receiver = recipient ?? throw new ArgumentNullException(nameof(recipient));
+            Receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
         }
 
         public Assignment()
         {
-            Giver = new User();
-            Receiver = new User();
+            if(Giver is null)
+                throw new ArgumentNullException(nameof(Giver));
+
+            if(Receiver is null)
+                throw new ArgumentNullException(nameof(Receiver));
         }
     }
 }

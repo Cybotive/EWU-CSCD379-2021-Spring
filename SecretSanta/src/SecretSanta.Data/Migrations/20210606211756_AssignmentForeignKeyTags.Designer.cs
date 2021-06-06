@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecretSanta.Data;
 
 namespace SecretSanta.Data.Migrations
 {
     [DbContext(typeof(SecretSantaContext))]
-    partial class SecretSantaContextModelSnapshot : ModelSnapshot
+    [Migration("20210606211756_AssignmentForeignKeyTags")]
+    partial class AssignmentForeignKeyTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,22 +39,18 @@ namespace SecretSanta.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("GiverId")
+                    b.Property<int>("GiverId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("GroupId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ReceiverId")
+                    b.Property<int>("ReceiverId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GiverId");
-
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("ReceiverId");
 
                     b.ToTable("Assignment");
                 });
@@ -81,8 +79,6 @@ namespace SecretSanta.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Title");
-
                     b.HasIndex("ReceiverId");
 
                     b.ToTable("Gifts");
@@ -99,8 +95,6 @@ namespace SecretSanta.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Name");
 
                     b.ToTable("Groups");
                 });
@@ -143,21 +137,9 @@ namespace SecretSanta.Data.Migrations
 
             modelBuilder.Entity("SecretSanta.Data.Assignment", b =>
                 {
-                    b.HasOne("SecretSanta.Data.User", "Giver")
-                        .WithMany()
-                        .HasForeignKey("GiverId");
-
                     b.HasOne("SecretSanta.Data.Group", null)
                         .WithMany("Assignments")
                         .HasForeignKey("GroupId");
-
-                    b.HasOne("SecretSanta.Data.User", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId");
-
-                    b.Navigation("Giver");
-
-                    b.Navigation("Receiver");
                 });
 
             modelBuilder.Entity("SecretSanta.Data.Gift", b =>
