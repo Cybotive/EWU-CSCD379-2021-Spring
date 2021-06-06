@@ -11,6 +11,7 @@ namespace SecretSanta.Data.Tests
         [TestMethod]
         public void UsersDbSet_AddingValidUser_IncrementsCount()
         {
+            //Arrange
             using SecretSantaContext db = new SecretSantaContext();
             User user = new User() { FirstName = "FirstNameTest", LastName = "LastNameTest" };
 
@@ -29,8 +30,12 @@ namespace SecretSanta.Data.Tests
             }
 
             int countBefore = db.Users.Count();
+
+            //Act
             User userAdded = db.Users.Add(user).Entity;
             db.SaveChanges();
+
+            //Assert
             Assert.AreEqual(countBefore + 1, db.Users.Count());
 
             try // Clean-up
