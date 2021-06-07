@@ -13,7 +13,7 @@ namespace SecretSanta.Data
         public SecretSantaContext() : base(new DbContextOptionsBuilder<SecretSantaContext>()
             .UseSqlite("Data Source=main.db").Options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

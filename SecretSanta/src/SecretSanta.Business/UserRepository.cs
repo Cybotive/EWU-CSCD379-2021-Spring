@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SecretSanta.Data;
 
 namespace SecretSanta.Business
 {
     public class UserRepository : IUserRepository
     {
-        public User Create(User item)
+        private static readonly SecretSantaContext Context = new SecretSantaContext();
+
+        /*public User Create(User item)
         {
             if (item is null)
             {
@@ -13,6 +17,17 @@ namespace SecretSanta.Business
             }
 
             MockData.Users[item.Id] = item;
+            return item;
+        }*/
+        public User Create(User item)
+        {
+            if (item is null)
+            {
+                throw new System.ArgumentNullException(nameof(item));
+            }
+
+            Context.Users.Add(item);
+            Context.SaveChanges();
             return item;
         }
 
@@ -27,7 +42,8 @@ namespace SecretSanta.Business
 
         public ICollection<User> List()
         {
-            return MockData.Users.Values;
+            List<User> list = Context.Users.ToList();
+            return list; // Temp var for debugging
         }
 
         public bool Remove(int id)
