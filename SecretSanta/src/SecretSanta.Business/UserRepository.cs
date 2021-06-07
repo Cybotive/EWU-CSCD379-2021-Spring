@@ -31,15 +31,6 @@ namespace SecretSanta.Business
             return item;
         }
 
-        /*public User? GetItem(int id)
-        {
-            if (MockData.Users.TryGetValue(id, out User? user))
-            {
-                return user;
-            }
-            return null;
-        }*/
-
         public User? GetItem(int id)
         {
             return Context.Users.Find(id);
@@ -50,10 +41,6 @@ namespace SecretSanta.Business
             return Context.Users.AsNoTracking().ToList();
         }
 
-        /*public bool Remove(int id)
-        {
-            return MockData.Users.Remove(id);
-        }*/
         public bool Remove(int id)
         {
             User userToRemove = Context.Users.Find(id);
@@ -76,16 +63,6 @@ namespace SecretSanta.Business
             
             return false;
         }
-
-        /*public void Save(User item)
-        {
-            if (item is null)
-            {
-                throw new System.ArgumentNullException(nameof(item));
-            }
-
-            MockData.Users[item.Id] = item;
-        }*/
 
         public void Save(User item)
         {
