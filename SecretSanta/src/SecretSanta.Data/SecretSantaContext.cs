@@ -11,7 +11,7 @@ namespace SecretSanta.Data
         public DbSet<Gift> Gifts => Set<Gift>();
 
         public SecretSantaContext() : base(new DbContextOptionsBuilder<SecretSantaContext>()
-            .UseSqlite("Data Source=main.db").Options)
+            .EnableSensitiveDataLogging().UseSqlite("Data Source=main.db").Options)
         {
             Database.Migrate();
         }
@@ -48,28 +48,6 @@ namespace SecretSanta.Data
 
             modelBuilder.Entity<Assignment>()
                 .HasKey(assign => assign.Id);
-            //modelBuilder.Entity<Assignment>()
-                //.HasAlternateKey(assign => new { assign.Receiver, assign.Giver }); //Can't have same property names
-
-            /*modelBuilder.Entity<Gift>()
-                .HasO*/
-            
-            /*modelBuilder.Entity<Assignment>()
-                .Property(item => item.Giver);
-            modelBuilder.Entity<Assignment>()
-                .Property(item => item.Receiver);*/
-
-            /*modelBuilder.Entity<Assignment>()
-                .HasOne<User>(item => item.Giver)
-                .WithOne();
-
-            modelBuilder.Entity<Assignment>()
-                .HasOne<User>(item => item.Receiver)
-                .WithOne();*/
-            
-            /*modelBuilder.Entity<Assignment>()
-                .Navigation(a => a.Giver)
-                .UsePropertyAccessMode(PropertyAccessMode.Property);*/
         }
     }
 }

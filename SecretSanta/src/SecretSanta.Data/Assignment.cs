@@ -9,6 +9,12 @@ namespace SecretSanta.Data
         public int Id { get; set; }
         public User Giver { get; private set; }
         public User Receiver { get; private set; }
+        /*public string ForeignKey
+        {
+            get {
+                return $"{Giver.FirstName} {Giver.LastName} {Receiver.FirstName} {Receiver.LastName}";
+            }
+        }*/
 
         public Assignment(User giver, User receiver)
         {
