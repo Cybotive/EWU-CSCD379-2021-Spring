@@ -32,6 +32,7 @@ namespace SecretSanta.Data
             }
 
             modelBuilder.Entity<User>()
+            .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasKey(user => user.Id);
             modelBuilder.Entity<User>()
                 .HasAlternateKey(user => new { user.FirstName, user.LastName });

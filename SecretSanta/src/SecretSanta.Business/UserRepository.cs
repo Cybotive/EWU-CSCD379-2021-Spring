@@ -8,49 +8,65 @@ namespace SecretSanta.Business
 {
     public class UserRepository : IUserRepository
     {
-        private SecretSantaContext Context = new SecretSantaContext();
+        //private SecretSantaContext Context = new SecretSantaContext();
 
         public User Create(User item)
         {
-            Context = new SecretSantaContext(); // Should've fixed tracking bug
             if (item is null)
             {
                 throw new System.ArgumentNullException(nameof(item));
             }
 
+            using SecretSantaContext context = new SecretSantaContext(); // Should've fixed tracking bug
 
-            var tracker = Context.Users.Add(item);
+            User? existingUser = context.Users
+            .Include(user => user.FirstName)
+            .Include(user => user.LastName)
+            .Where(
+                user => (user.FirstName.Equals(item.FirstName) && user.LastName.Equals(item.LastName)) || user.Id == item.Id)
+                .FirstOrDefault();
+            
+            if (existingUser is not null)
+            {
+                return existingUser;
+            }
+
+            var tracker = context.Users.Update(item);
             try
             {
-                Context.SaveChanges();
+                context.SaveChanges();
             }
             catch (DbUpdateException)
             {
                 tracker.State = EntityState.Unchanged;
             }
+
             return item;
         }
 
         public User? GetItem(int id)
         {
-            return Context.Users.Find(id);
+            using SecretSantaContext context = new SecretSantaContext();
+            return context.Users.Find(id);
         }
 
         public ICollection<User> List()
         {
-            return Context.Users.AsNoTracking().ToList();
+            using SecretSantaContext context = new SecretSantaContext();
+            return context.Users.AsNoTrackingWithIdentityResolution().ToList();
         }
 
         public bool Remove(int id)
         {
-            User userToRemove = Context.Users.Find(id);
+            using SecretSantaContext context = new SecretSantaContext();
+            User userToRemove = context.Users.Find(id);
 
             if (userToRemove is not null)
             {
-                var tracker = Context.Users.Remove(userToRemove);
+                var tracker = context.Users.Remove(userToRemove);
                 try
                 {
-                    Context.SaveChanges();
+                    context.SaveChanges();
                 }
                 catch (DbUpdateException)
                 {
@@ -71,8 +87,10 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-            Context.Users.Update(item);
-            Context.SaveChanges();
+            using SecretSantaContext context = new SecretSantaContext();
+
+            context.Users.Update(item);
+            context.SaveChanges();
         }
     }
 }

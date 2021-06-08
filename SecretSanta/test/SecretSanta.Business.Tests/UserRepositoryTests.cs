@@ -49,7 +49,7 @@ namespace SecretSanta.Business.Tests
             UserRepository sut = new();
             sut.Create(new() 
             { 
-                Id = 42,
+                Id = 52,
                 FirstName = "First",
                 LastName = "Last"
             });
@@ -67,7 +67,7 @@ namespace SecretSanta.Business.Tests
             UserRepository sut = new();
             sut.Create(new()
             {
-                Id = 42,
+                Id = 62,
                 FirstName = "First",
                 LastName = "Last"
             });
