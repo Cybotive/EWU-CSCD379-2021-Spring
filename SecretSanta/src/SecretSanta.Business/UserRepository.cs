@@ -19,7 +19,7 @@ namespace SecretSanta.Business
 
             using SecretSantaContext context = new SecretSantaContext(); // Should've fixed tracking bug
 
-            User? existingUser = context.Users
+            /*User? existingUser = context.Users
                 .Where(
                     user => (user.FirstName.Equals(item.FirstName) && user.LastName.Equals(item.LastName)) || user.Id == item.Id)
                 .FirstOrDefault();
@@ -27,16 +27,25 @@ namespace SecretSanta.Business
             if (existingUser is not null)
             {
                 return existingUser;
-            }
-
-            var tracker = context.Users.Update(item);
+            }*/
+            var trackerUpdate = context.Users.Update(item);
             try
             {
                 context.SaveChanges();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
-                tracker.State = EntityState.Unchanged;
+                trackerUpdate.State = EntityState.Unchanged;
+
+                var trackerSave = context.Users.Add(item);
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbUpdateException ex)
+                {
+                    trackerSave.State = EntityState.Unchanged;
+                }
             }
 
             return item;

@@ -34,6 +34,26 @@ namespace SecretSanta.Business.Tests
         }
 
         [TestMethod]
+        public void Create_WithOrWithoutItem_CanAddItem()
+        {
+            UserRepository sut = new();
+            User user = new()
+            {
+                Id = 42
+            };
+
+            sut.Remove(user.Id);
+            
+            User createdUser = sut.Create(user);
+            User createdUserDuplicate = sut.Create(user);
+
+            Assert.AreEqual(user, createdUser);
+            Assert.AreEqual(user, createdUserDuplicate);
+
+            sut.Remove(user.Id);
+        }
+
+        [TestMethod]
         public void GetItem_WithBadId_ReturnsNull()
         {
             UserRepository sut = new();
@@ -62,7 +82,7 @@ namespace SecretSanta.Business.Tests
         }
 
         [TestMethod]
-        public void List_WithUsers_ReturnsAllUser()
+        public void List_WithUsers_ReturnsPopulatedUserList()
         {
             UserRepository sut = new();
             sut.Create(new()
@@ -71,14 +91,18 @@ namespace SecretSanta.Business.Tests
                 FirstName = "First",
                 LastName = "Last"
             });
-
-            ICollection<User> users = sut.List();
-
-            Assert.AreEqual(MockData.Users.Count, users.Count);
-            foreach(var mockUser in MockData.Users.Values)
+            sut.Create(new()
             {
-                Assert.IsNotNull(users.SingleOrDefault(x => x.FirstName == mockUser.FirstName && x.LastName == mockUser.LastName));
-            }
+                Id = 620,
+                FirstName = "First",
+                LastName = "Last"
+            });
+
+            List<User> users = sut.List().ToList();
+
+            Assert.IsTrue(users.Count >= 2);
+            Assert.IsNotNull(users[0]);
+            Assert.IsNotNull(users[1]);
         }
 
         [TestMethod]

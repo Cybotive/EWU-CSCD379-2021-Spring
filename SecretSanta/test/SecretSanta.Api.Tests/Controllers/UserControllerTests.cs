@@ -163,9 +163,43 @@ namespace SecretSanta.Api.Tests.Controllers
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var createdUser = repository.GetItem(42);
-            Assert.AreEqual(42, createdUser.Id);
-            Assert.AreEqual("John", createdUser.FirstName);
-            Assert.AreEqual("Smith", createdUser.LastName);
+            Assert.AreEqual(42, createdUser?.Id);
+            Assert.AreEqual("John", createdUser?.FirstName);
+            Assert.AreEqual("Smith", createdUser?.LastName);
+        }
+
+        [TestMethod]
+        public async Task Create_DuplicateId_RespondsWithConflict409()
+        {
+            //Arrange
+            using WebApplicationFactory factory = new();
+            TestableUserRepository repository = factory.UserRepository;
+
+            HttpClient client = factory.CreateClient();
+
+            HttpResponseMessage responseBefore = await client.PostAsJsonAsync("/api/users/", new Dto.User
+            {
+                Id = 42,
+                FirstName = "John",
+                LastName = "Smith"
+            });
+
+            //Act
+            HttpResponseMessage responseAfter = await client.PostAsJsonAsync("/api/users/", new Dto.User
+            {
+                Id = 42,
+                FirstName = "John",
+                LastName = "Smith"
+            });
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, responseBefore.StatusCode);
+            var createdUser = repository.GetItem(42);
+            Assert.AreEqual(42, createdUser?.Id);
+            Assert.AreEqual("John", createdUser?.FirstName);
+            Assert.AreEqual("Smith", createdUser?.LastName);
+
+            Assert.AreEqual(HttpStatusCode.Conflict, responseAfter.StatusCode);
         }
 
         [TestMethod]
@@ -193,9 +227,9 @@ namespace SecretSanta.Api.Tests.Controllers
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var createdUser = repository.GetItem(42);
-            Assert.AreEqual(42, createdUser.Id);
-            Assert.AreEqual("Jane", createdUser.FirstName);
-            Assert.AreEqual("Doe", createdUser.LastName);
+            Assert.AreEqual(42, createdUser?.Id);
+            Assert.AreEqual("Jane", createdUser?.FirstName);
+            Assert.AreEqual("Doe", createdUser?.LastName);
         }
 
         [TestMethod]
@@ -223,9 +257,9 @@ namespace SecretSanta.Api.Tests.Controllers
             //Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             var createdUser = repository.GetItem(42);
-            Assert.AreEqual(42, createdUser.Id);
-            Assert.AreEqual("John", createdUser.FirstName);
-            Assert.AreEqual("Smith", createdUser.LastName);
+            Assert.AreEqual(42, createdUser?.Id);
+            Assert.AreEqual("John", createdUser?.FirstName);
+            Assert.AreEqual("Smith", createdUser?.LastName);
         }
     }
 }
