@@ -34,18 +34,18 @@ namespace SecretSanta.Data
             modelBuilder.Entity<User>()
             .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasKey(user => user.Id);
-            modelBuilder.Entity<User>()
-                .HasAlternateKey(user => new { user.FirstName, user.LastName });
+            //modelBuilder.Entity<User>()
+                //.HasAlternateKey(user => new { user.FirstName, user.LastName });
 
             modelBuilder.Entity<Gift>()
                 .HasKey(gift => gift.Id);
-            modelBuilder.Entity<Gift>()
-                .HasAlternateKey(gift => new { gift.Title });
+            //modelBuilder.Entity<Gift>()
+                //.HasAlternateKey(gift => new { gift.Title });
 
             modelBuilder.Entity<Group>()
                 .HasKey(group => group.Id);
-            modelBuilder.Entity<Group>()  
-                .HasAlternateKey(group => new { group.Name });
+            //modelBuilder.Entity<Group>()  
+                //.HasAlternateKey(group => new { group.Name });
 
             modelBuilder.Entity<Assignment>()
                 .HasKey(assign => assign.Id);

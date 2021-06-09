@@ -20,10 +20,8 @@ namespace SecretSanta.Business
             using SecretSantaContext context = new SecretSantaContext(); // Should've fixed tracking bug
 
             User? existingUser = context.Users
-            .Include(user => user.FirstName)
-            .Include(user => user.LastName)
-            .Where(
-                user => (user.FirstName.Equals(item.FirstName) && user.LastName.Equals(item.LastName)) || user.Id == item.Id)
+                .Where(
+                    user => (user.FirstName.Equals(item.FirstName) && user.LastName.Equals(item.LastName)) || user.Id == item.Id)
                 .FirstOrDefault();
             
             if (existingUser is not null)
