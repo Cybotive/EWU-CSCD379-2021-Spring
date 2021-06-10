@@ -24,7 +24,8 @@ namespace SecretSanta.Business.Tests
             GroupRepository sut = new();
             Group group = new()
             {
-                Id = 42
+                Id = 42,
+                Name = "ThisIsATestOf..."
             };
 
             sut.Remove(group.Id);

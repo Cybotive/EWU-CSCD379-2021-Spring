@@ -36,19 +36,25 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void Create_WithOrWithoutItem_CanAddItem()
         {
+            //Arrange
             UserRepository sut = new();
             User user = new()
             {
-                Id = 42
+                Id = 42,
+                FirstName = "Teddddd"
             };
 
             sut.Remove(user.Id);
             
+            //Act
             User createdUser = sut.Create(user);
             User createdUserDuplicate = sut.Create(user);
 
-            Assert.AreEqual(user, createdUser);
-            Assert.AreEqual(user, createdUserDuplicate);
+            //Assert
+            Assert.AreEqual(user.Id, createdUser.Id);
+            Assert.AreEqual(user.FirstName, createdUser.FirstName);
+            Assert.AreEqual(user.Id, createdUserDuplicate.Id);
+            Assert.AreEqual(user.FirstName, createdUserDuplicate.FirstName);
 
             sut.Remove(user.Id);
         }
