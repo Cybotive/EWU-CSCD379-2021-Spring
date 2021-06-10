@@ -69,22 +69,25 @@ namespace SecretSanta.Business.Tests
         }
 
         [TestMethod]
-        public void List_WithGroups_ReturnsAllGroup()
+        public void List_WithGroups_ReturnsPopulatedGroupList()
         {
             GroupRepository sut = new();
             sut.Create(new()
             {
-                Id = 42,
+                Id = 62,
+                Name = "Group",
+            });
+            sut.Create(new()
+            {
+                Id = 620,
                 Name = "Group",
             });
 
-            ICollection<Group> groups = sut.List();
+            List<Group> groups = sut.List().ToList();
 
-            Assert.AreEqual(MockData.Groups.Count, groups.Count);
-            foreach(var mockGroup in MockData.Groups.Values)
-            {
-                Assert.IsNotNull(groups.SingleOrDefault(x => x.Name == mockGroup.Name));
-            }
+            Assert.IsTrue(groups.Count >= 2);
+            Assert.IsNotNull(groups[0]);
+            Assert.IsNotNull(groups[1]);
         }
 
         [TestMethod]
@@ -114,11 +117,22 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void Save_WithValidItem_SavesItem()
         {
+            //Arrange
             GroupRepository sut = new();
+            Group initialGroup = new Group() { Id = 42, Name = "BeforeUpdate" };
+            Group updatedGroup = new Group() { Id = 42, Name = "AfterUpdate" };
+            sut.Create(initialGroup);
 
-            sut.Save(new Group() { Id = 42 });
+            //Act
+            sut.Save(updatedGroup);
 
-            Assert.AreEqual(42, sut.GetItem(42)?.Id);
+            //Assert
+            Group? gotGroup = sut.GetItem(42);
+            Assert.IsNotNull(gotGroup);
+            Assert.AreEqual(42, gotGroup.Id);
+            Assert.AreEqual(updatedGroup.Name, gotGroup.Name);
+            
+            sut.Remove(42);
         }
 
         [TestMethod]
