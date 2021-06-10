@@ -133,11 +133,22 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         public void Save_WithValidItem_SavesItem()
         {
+            //Arrange
             UserRepository sut = new();
+            User initialUser = new User() { Id = 42, FirstName = "BeforeUpdate" };
+            User updatedUser = new User() { Id = 42, FirstName = "AfterUpdate" };
+            sut.Create(initialUser);
 
-            sut.Save(new User() { Id = 42 });
+            //Act
+            sut.Save(updatedUser);
 
-            Assert.AreEqual(42, sut.GetItem(42)?.Id);
+            //Assert
+            User? gotUser = sut.GetItem(42);
+            Assert.IsNotNull(gotUser);
+            Assert.AreEqual(42, gotUser.Id);
+            Assert.AreEqual(updatedUser.FirstName, gotUser.FirstName);
+            
+            sut.Remove(42);
         }
     }
 }
