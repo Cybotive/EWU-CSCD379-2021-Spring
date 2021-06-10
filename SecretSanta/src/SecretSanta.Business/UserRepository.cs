@@ -85,10 +85,19 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-            using SecretSantaContext context = new SecretSantaContext();
+            using (SecretSantaContext context = new SecretSantaContext())
+            {
+                if (context.Users.Find(item.Id) is null)
+                {
+                    return;
+                }
+            }
 
-            context.Users.Update(item);
-            context.SaveChanges();
+            using (SecretSantaContext context = new SecretSantaContext())
+            {
+                context.Users.Update(item);
+                context.SaveChanges();
+            }
         }
     }
 }

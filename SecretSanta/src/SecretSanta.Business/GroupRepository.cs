@@ -83,16 +83,25 @@ namespace SecretSanta.Business
                 throw new ArgumentNullException(nameof(item));
             }
 
-            using SecretSantaContext context = new SecretSantaContext();
+            using (SecretSantaContext context = new SecretSantaContext())
+            {
+                if (context.Groups.Find(item.Id) is null)
+                {
+                    return;
+                }
+            }
 
-            context.Groups.Update(item);
-            context.SaveChanges();
+            using (SecretSantaContext context = new SecretSantaContext())
+            {
+                context.Groups.Update(item);
+                context.SaveChanges();
+            }
         }
 
         public AssignmentResult GenerateAssignments(int groupId)
         {
             using SecretSantaContext context = new SecretSantaContext();
-            
+
             Group group = context.Groups.Find(groupId);
 
             if (group is null)
