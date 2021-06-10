@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Data;
 
 namespace SecretSanta.Business
@@ -13,27 +15,65 @@ namespace SecretSanta.Business
                 throw new ArgumentNullException(nameof(item));
             }
 
-            MockData.Groups[item.Id] = item;
+            using SecretSantaContext context = new SecretSantaContext();
+
+            var trackerUpdate = context.Groups.Update(item);
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                trackerUpdate.State = EntityState.Unchanged;
+
+                var trackerSave = context.Groups.Add(item);
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    trackerSave.State = EntityState.Unchanged;
+                }
+            }
+
             return item;
         }
 
         public Group? GetItem(int id)
         {
-            if (MockData.Groups.TryGetValue(id, out Group? user))
-            {
-                return user;
-            }
-            return null;
+            using SecretSantaContext context = new SecretSantaContext();
+            return context.Groups.Find(id);
         }
 
         public ICollection<Group> List()
         {
-            return MockData.Groups.Values;
+            using SecretSantaContext context = new SecretSantaContext();
+            return context.Groups.AsNoTrackingWithIdentityResolution().ToList();
         }
 
         public bool Remove(int id)
         {
-            return MockData.Groups.Remove(id);
+            using SecretSantaContext context = new SecretSantaContext();
+            Group groupToRemove = context.Groups.Find(id);
+
+            if (groupToRemove is not null)
+            {
+                var tracker = context.Groups.Remove(groupToRemove);
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    tracker.State = EntityState.Unchanged;
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            return false;
         }
 
         public void Save(Group item)
@@ -43,12 +83,19 @@ namespace SecretSanta.Business
                 throw new ArgumentNullException(nameof(item));
             }
 
-            MockData.Groups[item.Id] = item;
+            using SecretSantaContext context = new SecretSantaContext();
+
+            context.Groups.Update(item);
+            context.SaveChanges();
         }
 
         public AssignmentResult GenerateAssignments(int groupId)
         {
-            if (!MockData.Groups.TryGetValue(groupId, out Group? group))
+            using SecretSantaContext context = new SecretSantaContext();
+            
+            Group group = context.Groups.Find(groupId);
+
+            if (group is null)
             {
                 return AssignmentResult.Error("Group not found");
             }
