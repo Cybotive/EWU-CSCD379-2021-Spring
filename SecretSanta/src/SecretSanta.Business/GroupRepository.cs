@@ -12,29 +12,22 @@ namespace SecretSanta.Business
         {
             if (item is null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new System.ArgumentNullException(nameof(item));
             }
 
-            using SecretSantaContext context = new SecretSantaContext();
-
-            var trackerUpdate = context.Groups.Update(item);
-            try
+            using (SecretSantaContext context = new SecretSantaContext())
             {
+                Group group = context.Groups.Find(item.Id);
+                if (group is not null)
+                {
+                    return group;
+                }
+            }
+
+            using (SecretSantaContext context = new SecretSantaContext())
+            {
+                context.Groups.Add(item);
                 context.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                trackerUpdate.State = EntityState.Unchanged;
-
-                var trackerSave = context.Groups.Add(item);
-                try
-                {
-                    context.SaveChanges();
-                }
-                catch (DbUpdateException)
-                {
-                    trackerSave.State = EntityState.Unchanged;
-                }
             }
 
             return item;

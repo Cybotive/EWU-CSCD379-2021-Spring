@@ -17,26 +17,19 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-            using SecretSantaContext context = new SecretSantaContext(); // Should've fixed tracking bug
-
-            var trackerUpdate = context.Users.Update(item);
-            try
+            using (SecretSantaContext context = new SecretSantaContext())
             {
-                context.SaveChanges();
+                User user = context.Users.Find(item.Id);
+                if (user is not null)
+                {
+                    return user;
+                }
             }
-            catch (DbUpdateException)
-            {
-                trackerUpdate.State = EntityState.Unchanged;
 
-                var trackerSave = context.Users.Add(item);
-                try
-                {
-                    context.SaveChanges();
-                }
-                catch (DbUpdateException)
-                {
-                    trackerSave.State = EntityState.Unchanged;
-                }
+            using (SecretSantaContext context = new SecretSantaContext())
+            {
+                context.Users.Add(item);
+                context.SaveChanges();
             }
 
             return item;
