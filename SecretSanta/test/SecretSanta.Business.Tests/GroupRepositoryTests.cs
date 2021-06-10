@@ -170,9 +170,15 @@ namespace SecretSanta.Business.Tests
                 Id = 42,
                 Name = "Group"
             });
-            group.Users.Add(new User { FirstName = "John", LastName = "Doe" });
-            group.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
-            group.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
+            
+            //group.Users.Clear();
+            //sut.Save(group);
+
+            //group.Users.Add(new User { FirstName = "John", LastName = "Doe" });
+            //group.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
+            //group.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
+
+            sut.Save(group);
 
             AssignmentResult result = sut.GenerateAssignments(42);
 

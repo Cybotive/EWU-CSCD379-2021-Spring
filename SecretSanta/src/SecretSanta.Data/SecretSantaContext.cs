@@ -32,7 +32,7 @@ namespace SecretSanta.Data
             }
 
             modelBuilder.Entity<User>()
-            .UsePropertyAccessMode(PropertyAccessMode.Property)
+                .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasKey(user => user.Id);
             //modelBuilder.Entity<User>()
                 //.HasAlternateKey(user => new { user.FirstName, user.LastName });
@@ -43,6 +43,7 @@ namespace SecretSanta.Data
                 //.HasAlternateKey(gift => new { gift.Title });
 
             modelBuilder.Entity<Group>()
+                .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasKey(group => group.Id);
             //modelBuilder.Entity<Group>()  
                 //.HasAlternateKey(group => new { group.Name });

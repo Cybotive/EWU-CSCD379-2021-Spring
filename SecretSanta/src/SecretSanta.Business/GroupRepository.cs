@@ -86,6 +86,8 @@ namespace SecretSanta.Business
 
             using (SecretSantaContext context = new SecretSantaContext())
             {
+                //context.Users.Remove
+
                 context.Groups.Update(item);
                 context.SaveChanges();
             }
@@ -95,7 +97,7 @@ namespace SecretSanta.Business
         {
             using SecretSantaContext context = new SecretSantaContext();
 
-            Group group = context.Groups.Find(groupId);
+            Group? group = context.Groups.Include(item => item.Users).Where(group => group.Id == groupId).FirstOrDefault();
 
             if (group is null)
             {
