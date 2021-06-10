@@ -22,15 +22,24 @@ namespace SecretSanta.Business.Tests
         public void Create_WithItem_CanGetItem()
         {
             GroupRepository sut = new();
-            Group user = new()
+            Group group = new()
             {
                 Id = 42
             };
 
-            Group createdGroup = sut.Create(user);
+            sut.Remove(group.Id);
+
+            Group createdGroup = sut.Create(group);
 
             Group? retrievedGroup = sut.GetItem(createdGroup.Id);
-            Assert.AreEqual(user, retrievedGroup);
+            Assert.AreEqual(group.Id, retrievedGroup?.Id);
+            Assert.AreEqual(group.Name, retrievedGroup?.Name);
+            Assert.IsNotNull(retrievedGroup?.Users);
+            Assert.IsTrue(group.Users.SequenceEqual(retrievedGroup?.Users!));
+            Assert.IsNotNull(retrievedGroup?.Assignments);
+            Assert.IsTrue(group.Assignments.SequenceEqual(retrievedGroup?.Assignments!));
+
+            sut.Remove(group.Id);
         }
 
         [TestMethod]
@@ -38,9 +47,9 @@ namespace SecretSanta.Business.Tests
         {
             GroupRepository sut = new();
 
-            Group? user = sut.GetItem(-1);
+            Group? group = sut.GetItem(-1);
 
-            Assert.IsNull(user);
+            Assert.IsNull(group);
         }
 
         [TestMethod]
@@ -53,10 +62,10 @@ namespace SecretSanta.Business.Tests
                 Name = "Group",
             });
 
-            Group? user = sut.GetItem(42);
+            Group? group = sut.GetItem(42);
 
-            Assert.AreEqual(42, user?.Id);
-            Assert.AreEqual("Group", user!.Name);
+            Assert.AreEqual(42, group?.Id);
+            Assert.AreEqual("Group", group!.Name);
         }
 
         [TestMethod]
@@ -69,12 +78,12 @@ namespace SecretSanta.Business.Tests
                 Name = "Group",
             });
 
-            ICollection<Group> users = sut.List();
+            ICollection<Group> groups = sut.List();
 
-            Assert.AreEqual(MockData.Groups.Count, users.Count);
+            Assert.AreEqual(MockData.Groups.Count, groups.Count);
             foreach(var mockGroup in MockData.Groups.Values)
             {
-                Assert.IsNotNull(users.SingleOrDefault(x => x.Name == mockGroup.Name));
+                Assert.IsNotNull(groups.SingleOrDefault(x => x.Name == mockGroup.Name));
             }
         }
 
