@@ -5,8 +5,7 @@ name: DeployFinalAssignment
 
 on:
   push:
-    branches:
-      - Assignment9
+    branches: [ Assignment* ]
 
 jobs:
   build-and-deploy:
