@@ -24,7 +24,7 @@ namespace SecretSanta.Business.Tests
             GroupRepository sut = new();
             Group group = new()
             {
-                Id = 42, // Unnecessary, but reduces database bloat
+                //Id = 42, // Unnecessary, but reduces database bloat
                 Name = "ThisIsATestOf...",
             };
 
@@ -33,8 +33,46 @@ namespace SecretSanta.Business.Tests
             Group createdGroup = sut.Create(group);
 
             Group? retrievedGroup = sut.GetItem(createdGroup.Id);
-            Assert.AreEqual(group.Id, retrievedGroup?.Id);
-            Assert.AreEqual(group.Name, retrievedGroup?.Name);
+
+            Assert.IsNotNull(retrievedGroup);
+            Assert.AreEqual(group.Id, retrievedGroup.Id);
+            Assert.AreEqual(group.Name, retrievedGroup.Name);
+
+            sut.Remove(group.Id);
+        }
+
+        [TestMethod]
+        public void Create_WithDuplicateId_ReturnsExistingGroup()
+        {
+            //Arrange
+            GroupRepository sut = new();
+
+            //Act
+            Group group = new()
+            {
+                //Id = 42,
+                Name = "Create_WithDuplicateId_ReturnsExistingGroup"
+            };
+            Group createdGroup = sut.Create(group);
+
+            Group groupNew = new()
+            {
+                Id = createdGroup.Id,
+                Name = "Create_WithDuplicateId_ReturnsExistingGroup_REPLACEYOURNAME"
+            };
+            Group createdGroupOverwrite = sut.Create(groupNew);
+            
+            Group? retrievedGroup = sut.GetItem(groupNew.Id);
+
+            //Assert
+            Assert.AreEqual(group.Id, createdGroup.Id);
+            Assert.AreEqual(group.Name, createdGroup.Name);
+            Assert.AreEqual(createdGroup.Id, createdGroupOverwrite.Id);
+            Assert.AreEqual(createdGroup.Name, createdGroupOverwrite.Name);
+
+            Assert.IsNotNull(retrievedGroup);
+            // Ensure name wasn't "Updated/Saved" through Create()
+            Assert.AreEqual(group.Name, retrievedGroup.Name);
 
             sut.Remove(group.Id);
         }
@@ -47,8 +85,7 @@ namespace SecretSanta.Business.Tests
             User testUser = new User() { FirstName = "testUser", LastName = "testUser", Gifts = { new(), new(), new() }};
             Group group = new()
             {
-                Id = 42, // Unnecessary, but reduces database bloat
-                Name = "GiveMeALLTheMemmbberrs",
+                Name = "Create_WithItem_RelatesAllMembers",
                 Users = new() { testUser, testUserReceiver }
             };
 
@@ -108,22 +145,25 @@ namespace SecretSanta.Business.Tests
         public void List_WithGroups_ReturnsPopulatedGroupList()
         {
             GroupRepository sut = new();
-            sut.Create(new()
+
+            int countBefore = sut.List().Count;
+
+            Group groupFirst = sut.Create(new()
             {
-                Id = 62,
-                Name = "Group",
+                Name = "List_WithGroups_ReturnsPopulatedGroupList_A",
             });
-            sut.Create(new()
+            Group groupSecond = sut.Create(new()
             {
-                Id = 620,
-                Name = "Group",
+                Name = "List_WithGroups_ReturnsPopulatedGroupList_B",
             });
 
             List<Group> groups = sut.List().ToList();
 
             Assert.IsTrue(groups.Count >= 2);
-            Assert.IsNotNull(groups[0]);
-            Assert.IsNotNull(groups[1]);
+            Assert.AreEqual(countBefore + 2, groups.Count);
+
+            sut.Remove(groupFirst.Id);
+            sut.Remove(groupSecond.Id);
         }
 
         [TestMethod]
@@ -132,10 +172,13 @@ namespace SecretSanta.Business.Tests
         public void Remove_WithId_ReturnsExpected(int id, bool expected)
         {
             GroupRepository sut = new();
+
+            sut.Remove(42);
+
             sut.Create(new()
             {
                 Id = 42,
-                Name = "Group"
+                Name = "Remove_WithId_ReturnsExpected"
             });
 
             Assert.AreEqual(expected, sut.Remove(id));
@@ -155,6 +198,9 @@ namespace SecretSanta.Business.Tests
         {
             //Arrange
             GroupRepository sut = new();
+
+            sut.Remove(42);
+
             Group initialGroup = new Group() { Id = 42, Name = "BeforeUpdate" };
             Group updatedGroup = new Group() { Id = 42, Name = "AfterUpdate" };
             sut.Create(initialGroup);
@@ -185,15 +231,15 @@ namespace SecretSanta.Business.Tests
         public void GenerateAssignments_WithLessThanThreeUsers_ReturnsError()
         {
             GroupRepository sut = new();
-            sut.Create(new()
+            Group createdGroup = sut.Create(new()
             {
-                Id = 42,
-                Name = "Group"
+                //Id = 42,
+                Name = "GenerateAssignments_WithLessThanThreeUsers_ReturnsError"
             });
 
-            AssignmentResult result = sut.GenerateAssignments(42);
+            AssignmentResult result = sut.GenerateAssignments(createdGroup.Id);
 
-            Assert.AreEqual($"Group Group must have at least three users", result.ErrorMessage);
+            Assert.AreEqual($"Group {createdGroup.Name} must have at least three users", result.ErrorMessage);
         }
 
         [TestMethod]
@@ -203,11 +249,8 @@ namespace SecretSanta.Business.Tests
             Group? group = sut.Create(new()
             {
                 //Id = 42,
-                Name = "Group"
+                Name = "GenerateAssignments_WithValidGroup_CreatesAssignments"
             });
-            
-            //group.Users.Clear();
-            //sut.Save(group);
 
             group.Users.Add(new User { FirstName = "John", LastName = "Doe" });
             group.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
@@ -215,14 +258,12 @@ namespace SecretSanta.Business.Tests
 
             sut.Save(group);
 
-            var listA = sut.List();
-
             group = sut.GetItem(group.Id);
             Assert.IsNotNull(group);
 
             AssignmentResult result = sut.GenerateAssignments(group.Id);
 
-            var listB = sut.List();
+            var sanityCheckDoesNotThrowException = sut.List();
 
             group = sut.GetItem(group.Id);
             Assert.IsNotNull(group);
@@ -232,6 +273,8 @@ namespace SecretSanta.Business.Tests
             Assert.AreEqual(3, group.Assignments.Select(x => x.Giver.FirstName).Distinct().Count());
             Assert.AreEqual(3, group.Assignments.Select(x => x.Receiver.FirstName).Distinct().Count());
             Assert.IsFalse(group.Assignments.Any(x => x.Giver.FirstName == x.Receiver.FirstName));
+
+            sut.Remove(group.Id);
         }
     }
 }

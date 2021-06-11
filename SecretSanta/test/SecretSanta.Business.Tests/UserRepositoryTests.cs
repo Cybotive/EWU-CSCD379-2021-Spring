@@ -24,37 +24,57 @@ namespace SecretSanta.Business.Tests
             UserRepository sut = new();
             User user = new()
             {
-                Id = 42
+                //Id = 42, // Unnecessary, but reduces database bloat
+                FirstName = "ThisIsATestOf...",
+                LastName = "...TheEmergencyBroadcastSystem",
             };
+
+            sut.Remove(user.Id);
 
             User createdUser = sut.Create(user);
 
             User? retrievedUser = sut.GetItem(createdUser.Id);
-            Assert.AreEqual(user, retrievedUser);
+
+            Assert.IsNotNull(retrievedUser);
+            Assert.AreEqual(user.Id, retrievedUser.Id);
+            Assert.AreEqual(user.FirstName, retrievedUser.FirstName);
+            Assert.AreEqual(user.LastName, retrievedUser.LastName);
+
+            sut.Remove(user.Id);
         }
 
         [TestMethod]
-        public void Create_WithOrWithoutItem_CanAddItem()
+        public void Create_WithDuplicateId_ReturnsExistingUser()
         {
             //Arrange
             UserRepository sut = new();
+
+            //Act
             User user = new()
             {
-                Id = 42,
-                FirstName = "Teddddd"
+                //Id = 42,
+                FirstName = "Create_WithDuplicateId_ReturnsExistingUser"
             };
-
-            sut.Remove(user.Id);
-            
-            //Act
             User createdUser = sut.Create(user);
-            User createdUserDuplicate = sut.Create(user);
+
+            User userNew = new()
+            {
+                Id = createdUser.Id,
+                FirstName = "Create_WithDuplicateId_ReturnsExistingUser_REPLACEYOURNAME"
+            };
+            User createdUserOverwrite = sut.Create(userNew);
+            
+            User? retrievedUser = sut.GetItem(userNew.Id);
 
             //Assert
             Assert.AreEqual(user.Id, createdUser.Id);
             Assert.AreEqual(user.FirstName, createdUser.FirstName);
-            Assert.AreEqual(user.Id, createdUserDuplicate.Id);
-            Assert.AreEqual(user.FirstName, createdUserDuplicate.FirstName);
+            Assert.AreEqual(createdUser.Id, createdUserOverwrite.Id);
+            Assert.AreEqual(createdUser.FirstName, createdUserOverwrite.FirstName);
+
+            Assert.IsNotNull(retrievedUser);
+            // Ensure name wasn't "Updated/Saved" through Create()
+            Assert.AreEqual(user.FirstName, retrievedUser.FirstName);
 
             sut.Remove(user.Id);
         }
@@ -73,54 +93,73 @@ namespace SecretSanta.Business.Tests
         public void GetItem_WithValidId_ReturnsUser()
         {
             UserRepository sut = new();
-            sut.Create(new() 
+            
+            User createdUser = sut.Create(new() 
             { 
-                Id = 52,
+                Id = 42,
+                FirstName = "First",
+                LastName = "Last"
+            });
+            User createdDynamicUser = sut.Create(new() 
+            { 
+                //Id = 42,
                 FirstName = "First",
                 LastName = "Last"
             });
 
-            User? user = sut.GetItem(42);
+            User? retrievedUser = sut.GetItem(createdUser.Id);
+            User? retrievedDynamicUser = sut.GetItem(createdDynamicUser.Id);
 
-            Assert.AreEqual(42, user?.Id);
-            Assert.AreEqual("First", user!.FirstName);
-            Assert.AreEqual("Last", user.LastName);
+            Assert.IsNotNull(retrievedUser);
+            Assert.IsNotNull(retrievedDynamicUser);
+
+            Assert.AreEqual(createdUser.Id, retrievedUser.Id);
+            Assert.AreEqual(createdDynamicUser.Id, retrievedDynamicUser.Id);
+
+            sut.Remove(createdUser.Id);
+            sut.Remove(createdDynamicUser.Id);
         }
 
         [TestMethod]
-        public void List_WithUsers_ReturnsPopulatedUserList()
+        public void List_WithUsers_ReturnsAccurateCount()
         {
             UserRepository sut = new();
-            sut.Create(new()
+
+            int countBefore = sut.List().Count;
+
+            User userFirst = sut.Create(new()
             {
-                Id = 62,
-                FirstName = "First",
+                FirstName = "List_WithUsers_ReturnsAccurateCount_A",
                 LastName = "Last"
             });
-            sut.Create(new()
+            User userSecond = sut.Create(new()
             {
-                Id = 620,
-                FirstName = "First",
+                FirstName = "List_WithUsers_ReturnsAccurateCount_B",
                 LastName = "Last"
             });
 
             List<User> users = sut.List().ToList();
 
             Assert.IsTrue(users.Count >= 2);
-            Assert.IsNotNull(users[0]);
-            Assert.IsNotNull(users[1]);
+            Assert.AreEqual(countBefore + 2, users.Count);
+            
+            sut.Remove(userFirst.Id);
+            sut.Remove(userSecond.Id);
         }
 
         [TestMethod]
         [DataRow(-1, false)]
         [DataRow(42, true)]
-        public void Remove_WithInvalidId_ReturnsTrue(int id, bool expected)
+        public void Remove_WithId_ReturnsExpected(int id, bool expected)
         {
             UserRepository sut = new();
+
+            sut.Remove(42);
+
             sut.Create(new()
             {
                 Id = 42,
-                FirstName = "First",
+                FirstName = "Remove_WithId_ReturnsExpected",
                 LastName = "Last"
             });
 
@@ -141,6 +180,9 @@ namespace SecretSanta.Business.Tests
         {
             //Arrange
             UserRepository sut = new();
+
+            sut.Remove(42);
+
             User initialUser = new User() { Id = 42, FirstName = "BeforeUpdate" };
             User updatedUser = new User() { Id = 42, FirstName = "AfterUpdate" };
             sut.Create(initialUser);

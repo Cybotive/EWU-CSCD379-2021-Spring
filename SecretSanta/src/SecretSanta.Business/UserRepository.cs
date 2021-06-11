@@ -8,8 +8,6 @@ namespace SecretSanta.Business
 {
     public class UserRepository : IUserRepository
     {
-        //private SecretSantaContext Context = new SecretSantaContext();
-
         public User Create(User item)
         {
             if (item is null)
@@ -28,8 +26,10 @@ namespace SecretSanta.Business
 
             using (SecretSantaContext context = new SecretSantaContext())
             {
-                context.Users.Add(item);
+                var settledUser = context.Users.Add(item);
                 context.SaveChanges();
+                // Likely unnecessary, but ensures Id gets updated from db
+                item.Id = settledUser.CurrentValues.GetValue<int>("Id");
             }
 
             return item;
@@ -38,13 +38,24 @@ namespace SecretSanta.Business
         public User? GetItem(int id)
         {
             using SecretSantaContext context = new SecretSantaContext();
-            return context.Users.Find(id);
+
+            return context.Users
+                .Include(user => user.Groups)
+                .ThenInclude(group => group.Assignments)
+                .Include(user => user.Gifts)
+                .Where(user => user.Id == id)
+                .SingleOrDefault();
         }
 
         public ICollection<User> List()
         {
             using SecretSantaContext context = new SecretSantaContext();
-            return context.Users.AsNoTrackingWithIdentityResolution().ToList();
+
+            return context.Users
+                .Include(user => user.Groups)
+                .ThenInclude(group => group.Assignments)
+                .Include(user => user.Gifts)
+                .ToList();
         }
 
         public bool Remove(int id)
@@ -78,13 +89,13 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-            using (SecretSantaContext context = new SecretSantaContext())
+            /*using (SecretSantaContext context = new SecretSantaContext())
             {
                 if (context.Users.Find(item.Id) is null)
                 {
                     return;
                 }
-            }
+            }*/
 
             using (SecretSantaContext context = new SecretSantaContext())
             {

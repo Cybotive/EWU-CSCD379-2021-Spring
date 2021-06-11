@@ -26,11 +26,10 @@ namespace SecretSanta.Business
 
             using (SecretSantaContext context = new SecretSantaContext())
             {
-                var test = context.Groups.Add(item);
+                var settledGroup = context.Groups.Add(item);
                 context.SaveChanges();
-                //context.Groups.Find();
-                //test.CurrentValues.GetValue<int>("Id");
-                item.Id = test.CurrentValues.GetValue<int>("Id");
+                // Likely unnecessary, but ensures Id gets updated from db
+                item.Id = settledGroup.CurrentValues.GetValue<int>("Id");
             }
 
             return item;
