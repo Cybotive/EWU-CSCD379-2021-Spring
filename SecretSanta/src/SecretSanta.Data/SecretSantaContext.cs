@@ -31,8 +31,8 @@ namespace SecretSanta.Data
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
-            modelBuilder.Entity<User>()
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
+            /*modelBuilder.Entity<User>()
+                //.UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasKey(user => user.Id);
             //modelBuilder.Entity<User>()
                 //.HasAlternateKey(user => new { user.FirstName, user.LastName });
@@ -43,13 +43,25 @@ namespace SecretSanta.Data
                 //.HasAlternateKey(gift => new { gift.Title });
 
             modelBuilder.Entity<Group>()
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
+                //.UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasKey(group => group.Id);
             //modelBuilder.Entity<Group>()  
                 //.HasAlternateKey(group => new { group.Name });
 
             modelBuilder.Entity<Assignment>()
-                .HasKey(assign => assign.Id);
+                .HasKey(assign => assign.Id);*/
+
+            modelBuilder.Entity<Group>()
+                .HasMany(group => group.Users)
+                .WithMany(group => group.Groups);
+
+            modelBuilder.Entity<Group>()
+                .HasMany(group => group.Assignments)
+                .WithOne(assign => assign.Group);
+
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.Gifts)
+                .WithOne(user => user.Receiver);
         }
     }
 }

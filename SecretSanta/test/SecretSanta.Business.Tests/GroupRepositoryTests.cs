@@ -22,18 +22,21 @@ namespace SecretSanta.Business.Tests
         public void Create_WithItem_CanGetItem()
         {
             GroupRepository sut = new();
+            User testUserReceiver = new User() { FirstName = "TestClass", LastName = "TestClass"};
+            User testUser = new User() { FirstName = "TestClass", LastName = "TestClass", Gifts = { new() { Receiver = testUserReceiver } }};
             Group group = new()
             {
-                Id = 42,
-                Name = "ThisIsATestOf..."
+                //Id = 42,
+                Name = "ThisIsATestOf...",
+                Users = new() { testUser }
             };
 
-            sut.Remove(group.Id);
+            //sut.Remove(group.Id);
 
             Group createdGroup = sut.Create(group);
 
             Group? retrievedGroup = sut.GetItem(createdGroup.Id);
-            Assert.AreEqual(group.Id, retrievedGroup?.Id);
+            //Assert.AreEqual(group.Id, retrievedGroup?.Id);
             Assert.AreEqual(group.Name, retrievedGroup?.Name);
             Assert.IsNotNull(retrievedGroup?.Users);
             Assert.IsTrue(group.Users.SequenceEqual(retrievedGroup?.Users!));
@@ -180,10 +183,17 @@ namespace SecretSanta.Business.Tests
 
             sut.Save(group);
 
+            var listA = sut.List();
+
             group = sut.GetItem(group.Id);
             Assert.IsNotNull(group);
 
             AssignmentResult result = sut.GenerateAssignments(group.Id);
+
+            var listB = sut.List();
+
+            group = sut.GetItem(group.Id);
+            Assert.IsNotNull(group);
 
             Assert.IsTrue(result.IsSuccess);
             Assert.AreEqual(3, group.Assignments.Count);

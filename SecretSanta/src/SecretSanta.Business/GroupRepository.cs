@@ -26,8 +26,11 @@ namespace SecretSanta.Business
 
             using (SecretSantaContext context = new SecretSantaContext())
             {
-                context.Groups.Add(item);
+                var test = context.Groups.Add(item);
                 context.SaveChanges();
+                //context.Groups.Find();
+                //test.CurrentValues.GetValue<int>("Id");
+                item.Id = test.CurrentValues.GetValue<int>("Id");
             }
 
             return item;
@@ -36,13 +39,24 @@ namespace SecretSanta.Business
         public Group? GetItem(int id)
         {
             using SecretSantaContext context = new SecretSantaContext();
-            return context.Groups.Find(id);
+            
+            return context.Groups
+                .Include(group => group.Users)
+                .ThenInclude(group => group.Gifts)
+                .Include(group => group.Assignments)
+                .Where(group => group.Id == id)
+                .SingleOrDefault();
         }
 
         public ICollection<Group> List()
         {
             using SecretSantaContext context = new SecretSantaContext();
-            return context.Groups.AsNoTrackingWithIdentityResolution().ToList();
+            
+            return context.Groups
+                .Include(group => group.Users)
+                .ThenInclude(user => user.Gifts)
+                .Include(group => group.Assignments)
+                .ToList();
         }
 
         public bool Remove(int id)
@@ -75,8 +89,31 @@ namespace SecretSanta.Business
             {
                 throw new ArgumentNullException(nameof(item));
             }
+            
+            using SecretSantaContext context = new SecretSantaContext();
 
-            using (SecretSantaContext context = new SecretSantaContext())
+            context.Groups.Update(item);
+            context.SaveChanges();
+
+            /*Remove(item);
+
+            using SecretSantaContext context = new SecretSantaContext();
+
+            var foundGroup = context.Groups.Find(item.Id);
+            if (foundGroup is null)
+            {
+                Create(item);
+            }
+            else
+            {
+                context.Groups.Remove(context.Groups.Find(item.Id));
+                context.SaveChanges();
+                Create(item);
+            }
+            
+            context.SaveChanges();
+
+            /*using (SecretSantaContext context = new SecretSantaContext())
             {
                 if (context.Groups.Find(item.Id) is null)
                 {
@@ -87,8 +124,8 @@ namespace SecretSanta.Business
             using (SecretSantaContext context = new SecretSantaContext())
             {
                 Group? exisitingGroup = context.Groups
-                    .Where(group => group.Id == item.Id)
                     .Include(group => group.Users)
+                    .Where(group => group.Id == item.Id)
                     .SingleOrDefault();
 
                 if (exisitingGroup is null)
@@ -96,9 +133,11 @@ namespace SecretSanta.Business
                     return;
                 }
 
+                
+
                 //context.Users.Remove Might just need to create a UsersGroups many-to-many object manually to solve the issue
 
-                context.Entry<Group>(exisitingGroup).CurrentValues.SetValues(item);
+                /*context.Entry<Group>(exisitingGroup).CurrentValues.SetValues(item);
 
                 foreach (User existingUser in exisitingGroup.Users)
                 {
@@ -123,11 +162,11 @@ namespace SecretSanta.Business
                     {
                         context.Entry(existingUser).CurrentValues.SetValues(updatedUser);
                     }
-                }
+                }\\
 
                 //context.Groups.Update(item);
                 context.SaveChanges();
-            }
+            }*/
         }
 
         public AssignmentResult GenerateAssignments(int groupId)
@@ -163,7 +202,7 @@ namespace SecretSanta.Business
             for(int i = 0; i < users.Count; i++)
             {
                 int endIndex = (i + 1) % users.Count;
-                group.Assignments.Add(new Assignment(users[i], users[endIndex]));
+                group.Assignments.Add(new Assignment(users[i], users[endIndex], group));
             }
 
             context.SaveChanges();
