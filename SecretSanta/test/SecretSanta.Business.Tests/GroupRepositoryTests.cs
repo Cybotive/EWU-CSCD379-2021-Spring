@@ -22,26 +22,58 @@ namespace SecretSanta.Business.Tests
         public void Create_WithItem_CanGetItem()
         {
             GroupRepository sut = new();
-            User testUserReceiver = new User() { FirstName = "TestClass", LastName = "TestClass"};
-            User testUser = new User() { FirstName = "TestClass", LastName = "TestClass", Gifts = { new() { Receiver = testUserReceiver } }};
             Group group = new()
             {
-                //Id = 42,
+                Id = 42, // Unnecessary, but reduces database bloat
                 Name = "ThisIsATestOf...",
-                Users = new() { testUser }
             };
 
-            //sut.Remove(group.Id);
+            sut.Remove(group.Id);
 
             Group createdGroup = sut.Create(group);
 
             Group? retrievedGroup = sut.GetItem(createdGroup.Id);
-            //Assert.AreEqual(group.Id, retrievedGroup?.Id);
+            Assert.AreEqual(group.Id, retrievedGroup?.Id);
             Assert.AreEqual(group.Name, retrievedGroup?.Name);
+
+            sut.Remove(group.Id);
+        }
+
+        [TestMethod]
+        public void Create_WithItem_CanRetrieveMembers()
+        {
+            GroupRepository sut = new();
+            User testUserReceiver = new User() { FirstName = "testUserReceiver", LastName = "testUserReceiver" };
+            User testUser = new User() { FirstName = "testUser", LastName = "testUser", Gifts = { new(testUserReceiver) }};
+            Group group = new()
+            {
+                Id = 42, // Unnecessary, but reduces database bloat
+                Name = "GiveMeALLTheMemmbberrs",
+                Users = new() { testUser, testUserReceiver }
+            };
+
+            sut.Remove(group.Id);
+
+            Group createdGroup = sut.Create(group);
+
+            Group? retrievedGroup = sut.GetItem(createdGroup.Id);
+
+            Assert.AreEqual(group.Name, retrievedGroup?.Name);
+
             Assert.IsNotNull(retrievedGroup?.Users);
-            Assert.IsTrue(group.Users.SequenceEqual(retrievedGroup?.Users!));
+            Assert.AreEqual(group.Users.Count, retrievedGroup.Users.Count);
+
+            User userLocal = group.Users.Where(user => user.Id == testUser.Id).Single();
+            User userRetrieved = retrievedGroup.Users.Where(user => user.Id == testUser.Id).Single();
+
+            Assert.AreEqual(userLocal.Id, userRetrieved.Id);
+            Assert.AreEqual(userLocal.FirstName, userRetrieved.FirstName);
+            Assert.AreEqual(userLocal.LastName, userRetrieved.LastName);
+
+            Assert.AreEqual(userLocal.Gifts.First().Receiver.Id, userRetrieved.Gifts.First().Receiver.Id);
+
             Assert.IsNotNull(retrievedGroup?.Assignments);
-            Assert.IsTrue(group.Assignments.SequenceEqual(retrievedGroup?.Assignments!));
+            Assert.AreEqual(group.Assignments.Count, retrievedGroup.Assignments.Count);
 
             sut.Remove(group.Id);
         }
@@ -60,16 +92,15 @@ namespace SecretSanta.Business.Tests
         public void GetItem_WithValidId_ReturnsGroup()
         {
             GroupRepository sut = new();
+            
             sut.Create(new() 
             { 
-                Id = 42,
-                Name = "Group",
+                Id = 42
             });
 
             Group? group = sut.GetItem(42);
 
             Assert.AreEqual(42, group?.Id);
-            Assert.AreEqual("Group", group!.Name);
         }
 
         [TestMethod]

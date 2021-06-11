@@ -16,10 +16,13 @@ namespace SecretSanta.Data
             Receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
         }
 
-        public Gift()
+        private Gift()
+        {}
+
+        /*public Gift()
         {
             if(Receiver is null)
                 throw new ArgumentNullException(nameof(Receiver));
-        }
+        }*/
     }
 }

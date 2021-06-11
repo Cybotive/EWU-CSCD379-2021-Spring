@@ -7,8 +7,11 @@ namespace SecretSanta.Data
     public class Assignment
     {
         public int Id { get; set; }
+        public int GiverId { get; set; }
         public User Giver { get; set; }
+        public int ReceiverId { get; set; }
         public User Receiver { get; set; }
+        public int GroupId { get; set; }
         public Group Group {get; set; }
 
         public Assignment(User giver, User receiver, Group group)
@@ -18,7 +21,10 @@ namespace SecretSanta.Data
             Group = group ?? throw new ArgumentNullException(nameof(group));
         }
 
-        public Assignment()
+        private Assignment()
+        {}
+
+        /*public Assignment()
         {
             if(Giver is null)
                 throw new ArgumentNullException(nameof(Giver));
@@ -28,6 +34,6 @@ namespace SecretSanta.Data
 
             if(Group is null)
                 throw new ArgumentNullException(nameof(Group));
-        }
+        }*/
     }
 }
