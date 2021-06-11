@@ -9,7 +9,7 @@
 
 ## Overview
 
-In this assignment we are going to build "complete" the SecretSanta project. As discussed in class on Thursday, you have two weeks to complete the assignment which is worth "double the points". The final assignment is due by __midnight on Friday, June 11__.
+In this assignment we are going to build "complete" the SecretSanta project. As discussed in class on Thursday, you have two weeks to complete the assignment which is worth "double the points". The final assignment is due by __midnight on Friday, June 11__. 
 
 __Updated June 8, 2021:__ 
  - Place items in priority order
