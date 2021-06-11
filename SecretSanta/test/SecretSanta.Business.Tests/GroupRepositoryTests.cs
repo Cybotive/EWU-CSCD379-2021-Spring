@@ -40,11 +40,11 @@ namespace SecretSanta.Business.Tests
         }
 
         [TestMethod]
-        public void Create_WithItem_CanRetrieveMembers()
+        public void Create_WithItem_RelatesAllMembers()
         {
             GroupRepository sut = new();
             User testUserReceiver = new User() { FirstName = "testUserReceiver", LastName = "testUserReceiver" };
-            User testUser = new User() { FirstName = "testUser", LastName = "testUser", Gifts = { new(testUserReceiver) }};
+            User testUser = new User() { FirstName = "testUser", LastName = "testUser", Gifts = { new(), new(), new() }};
             Group group = new()
             {
                 Id = 42, // Unnecessary, but reduces database bloat
@@ -70,6 +70,7 @@ namespace SecretSanta.Business.Tests
             Assert.AreEqual(userLocal.FirstName, userRetrieved.FirstName);
             Assert.AreEqual(userLocal.LastName, userRetrieved.LastName);
 
+            Assert.AreEqual(userLocal.Gifts.Count, userRetrieved.Gifts.Count);
             Assert.AreEqual(userLocal.Gifts.First().Receiver.Id, userRetrieved.Gifts.First().Receiver.Id);
 
             Assert.IsNotNull(retrievedGroup?.Assignments);

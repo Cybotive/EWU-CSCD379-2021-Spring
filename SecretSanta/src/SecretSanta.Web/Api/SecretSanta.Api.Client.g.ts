@@ -134,6 +134,12 @@ export class GroupsClient implements IGroupsClient {
             let resultData200  = _responseText;
             result200 = Group.fromJS(resultData200);
             return result200;
+        } else if (status === 409) {
+            const _responseText = response.data;
+            let result409: any = null;
+            let resultData409  = _responseText;
+            result409 = ProblemDetails.fromJS(resultData409);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result409);
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);

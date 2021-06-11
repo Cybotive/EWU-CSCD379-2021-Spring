@@ -16,13 +16,7 @@ namespace SecretSanta.Data
             Receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
         }
 
-        private Gift()
+        public Gift() // Currently unavoidable null-path due to EF weirdness
         {}
-
-        /*public Gift()
-        {
-            if(Receiver is null)
-                throw new ArgumentNullException(nameof(Receiver));
-        }*/
     }
 }
