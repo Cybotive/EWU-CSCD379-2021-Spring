@@ -1,7 +1,15 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 <section class="flex flex-wrap mb-6" x-data="SecretSanta.setupGroups()" x-init="mounted()">
+
+    <script>
+        var webHost = "@Configuration["WebHost"].TrimEnd('/')";
+    </script>
+
     <template x-for="(currentGroup, index) in groups" :key="index">
         <section class="w-full sm:w-1/3">
-            <a :href="`https://localhost:5001/groups/edit/${currentGroup.id}`">
+            <a :href="`${webHost}/groups/edit/${currentGroup.id}`">
                 <section class="border-gray-500 hover:shadow-xl border-2 p-6 m-5 rounded-xl flex flex-row justify-between">
                     <div class="inline-block"><span x-text="currentGroup.name"></span></div>
                     <button class="-mt-6" @@click.prevent="deleteGroup(currentGroup)"><i class="fas fa-trash text-gray-700 hover:text-red-700"></i></button>
