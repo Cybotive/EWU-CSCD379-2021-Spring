@@ -86,9 +86,46 @@ namespace SecretSanta.Business
 
             using (SecretSantaContext context = new SecretSantaContext())
             {
-                //context.Users.Remove
+                Group? exisitingGroup = context.Groups
+                    .Where(group => group.Id == item.Id)
+                    .Include(group => group.Users)
+                    .SingleOrDefault();
 
-                context.Groups.Update(item);
+                if (exisitingGroup is null)
+                {
+                    return;
+                }
+
+                //context.Users.Remove Might just need to create a UsersGroups many-to-many object manually to solve the issue
+
+                context.Entry<Group>(exisitingGroup).CurrentValues.SetValues(item);
+
+                foreach (User existingUser in exisitingGroup.Users)
+                {
+                    if(!item.Users.Any(user => user.Id == existingUser.Id))
+                    {
+                        context.Users.Remove(existingUser);
+                    }
+                }
+
+                foreach (User updatedUser in item.Users)
+                {
+                    User? existingUser = exisitingGroup.Users
+                        .Where(user => user.Id == updatedUser.Id)
+                        .SingleOrDefault();
+
+                    if (existingUser is null)
+                    {
+                        exisitingGroup.Users.Add(updatedUser);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        context.Entry(existingUser).CurrentValues.SetValues(updatedUser);
+                    }
+                }
+
+                //context.Groups.Update(item);
                 context.SaveChanges();
             }
         }
@@ -128,6 +165,8 @@ namespace SecretSanta.Business
                 int endIndex = (i + 1) % users.Count;
                 group.Assignments.Add(new Assignment(users[i], users[endIndex]));
             }
+
+            context.SaveChanges();
             return AssignmentResult.Success();
         }
     }

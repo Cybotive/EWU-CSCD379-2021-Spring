@@ -165,22 +165,25 @@ namespace SecretSanta.Business.Tests
         public void GenerateAssignments_WithValidGroup_CreatesAssignments()
         {
             GroupRepository sut = new();
-            Group group = sut.Create(new()
+            Group? group = sut.Create(new()
             {
-                Id = 42,
+                //Id = 42,
                 Name = "Group"
             });
             
             //group.Users.Clear();
             //sut.Save(group);
 
-            //group.Users.Add(new User { FirstName = "John", LastName = "Doe" });
-            //group.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
-            //group.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
+            group.Users.Add(new User { FirstName = "John", LastName = "Doe" });
+            group.Users.Add(new User { FirstName = "Jane", LastName = "Smith" });
+            group.Users.Add(new User { FirstName = "Bob", LastName = "Jones" });
 
             sut.Save(group);
 
-            AssignmentResult result = sut.GenerateAssignments(42);
+            group = sut.GetItem(group.Id);
+            Assert.IsNotNull(group);
+
+            AssignmentResult result = sut.GenerateAssignments(group.Id);
 
             Assert.IsTrue(result.IsSuccess);
             Assert.AreEqual(3, group.Assignments.Count);
