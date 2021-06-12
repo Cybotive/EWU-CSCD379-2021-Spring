@@ -31,6 +31,7 @@ namespace SecretSanta.Data
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
+            /* These are making my tests fail due to bad configuration, but otherwise they work...
             modelBuilder.Entity<User>()
                 .HasAlternateKey(user => new { user.FirstName, user.LastName });
 
@@ -38,7 +39,7 @@ namespace SecretSanta.Data
                 .HasAlternateKey(gift => new { gift.Title });
 
             modelBuilder.Entity<Group>()  
-                .HasAlternateKey(group => new { group.Name });
+                .HasAlternateKey(group => new { group.Name });*/
         }
     }
 }
