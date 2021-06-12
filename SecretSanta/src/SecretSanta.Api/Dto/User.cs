@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SecretSanta.Api.Dto
 {
@@ -19,7 +20,8 @@ namespace SecretSanta.Api.Dto
             {
                 FirstName = user.FirstName,
                 Id = user.Id,
-                LastName = user.LastName
+                LastName = user.LastName,
+                Gifts = user.Gifts.Select(gift => Gift.ToDto(gift)).ToList()!
             };
         }
 

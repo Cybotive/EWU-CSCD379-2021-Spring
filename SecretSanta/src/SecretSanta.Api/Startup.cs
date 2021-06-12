@@ -17,6 +17,7 @@ namespace SecretSanta.Api
             services.AddDbContext<SecretSantaContext>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGiftRepository, GiftRepository>();
             services.AddControllers();
             services.AddSwaggerDocument();
 

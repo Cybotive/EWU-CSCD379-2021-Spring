@@ -23,6 +23,12 @@ namespace SecretSanta.Api.Controllers
             return Repository.List().Select(x => Dto.Gift.ToDto(x)!);
         }
 
+        [HttpGet("owned/{id}")]
+        public IEnumerable<Dto.Gift> GetOwnedBy(int id)
+        {
+            return Repository.List().Select(x => Dto.Gift.ToDto(x)!).Where(gift => gift.Receiver?.Id == id);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Dto.Gift?> Get(int id)
         {

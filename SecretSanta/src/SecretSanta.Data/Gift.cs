@@ -8,7 +8,7 @@ namespace SecretSanta.Data
         public string Title { get; set; } = "";
         public string? Description { get; set; } = "";
         public string? Url { get; set; } = "";
-        public int Priority { get; set; }
+        public int Priority { get; set; } = 0;
         public User Receiver { get; set; }
 
         public Gift(User receiver)
