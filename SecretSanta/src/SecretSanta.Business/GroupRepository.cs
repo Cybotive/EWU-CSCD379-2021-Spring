@@ -8,6 +8,18 @@ namespace SecretSanta.Business
 {
     public class GroupRepository : IGroupRepository
     {
+        private SecretSantaContext Context;
+
+        public GroupRepository(SecretSantaContext context)
+        {
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public GroupRepository()
+        {
+            Context = new();
+        }
+
         public Group Create(Group item)
         {
             if (item is null)
@@ -15,31 +27,25 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-            using (SecretSantaContext context = new SecretSantaContext())
+            Group? group = Context.Groups.Find(item.Id);
+            if (group is not null)
             {
-                Group group = context.Groups.Find(item.Id);
-                if (group is not null)
-                {
-                    return group;
-                }
+                return group;
             }
 
-            using (SecretSantaContext context = new SecretSantaContext())
-            {
-                var settledGroup = context.Groups.Add(item);
-                context.SaveChanges();
-                // Likely unnecessary, but ensures Id gets updated from db
-                item.Id = settledGroup.CurrentValues.GetValue<int>("Id");
-            }
+            var settledGroup = Context.Groups.Add(item);
+            Context.SaveChanges();
+            // Likely unnecessary, but ensures Id gets updated from db
+            item.Id = settledGroup.CurrentValues.GetValue<int>("Id");
 
             return item;
         }
 
         public Group? GetItem(int id)
         {
-            using SecretSantaContext context = new SecretSantaContext();
+            //using SecretSantaContext context = new SecretSantaContext();
             
-            return context.Groups
+            return Context.Groups
                 .Include(group => group.Users)
                 .ThenInclude(group => group.Gifts)
                 .Include(group => group.Assignments)
@@ -49,9 +55,9 @@ namespace SecretSanta.Business
 
         public ICollection<Group> List()
         {
-            using SecretSantaContext context = new SecretSantaContext();
+            //using SecretSantaContext context = new SecretSantaContext();
             
-            return context.Groups
+            return Context.Groups
                 .Include(group => group.Users)
                 .ThenInclude(user => user.Gifts)
                 .Include(group => group.Assignments)
@@ -60,22 +66,12 @@ namespace SecretSanta.Business
 
         public bool Remove(int id)
         {
-            using SecretSantaContext context = new SecretSantaContext();
-            Group groupToRemove = context.Groups.Find(id);
-
+            Group? groupToRemove = Context.Groups.Find(id);
+            
             if (groupToRemove is not null)
             {
-                var tracker = context.Groups.Remove(groupToRemove);
-                try
-                {
-                    context.SaveChanges();
-                }
-                catch (DbUpdateException)
-                {
-                    tracker.State = EntityState.Unchanged;
-                    return false;
-                }
-                
+                Context.Groups.Remove(groupToRemove);
+                Context.SaveChanges();
                 return true;
             }
             
@@ -88,18 +84,39 @@ namespace SecretSanta.Business
             {
                 throw new ArgumentNullException(nameof(item));
             }
-            
-            using SecretSantaContext context = new SecretSantaContext();
 
-            context.Groups.Update(item);
-            context.SaveChanges();
+            Group? foundGroup = GetItem(item.Id);
+
+            if (foundGroup is null)
+            {
+                return;
+            }
+
+            /* Trying to work around tracking bug
+            foreach(User user in item.Users.ToList())
+            {
+                if (foundGroup.Users.Any(u => u.Id == user.Id))
+                {
+                    item.Users.Remove(user);
+                    //item.Users.Remove(user);
+                    //foundGroup.Users.Where(u => u.Id == user.Id).SingleOrDefault();
+                    //Context.Entry(user).State = EntityState.Unchanged;
+                }
+            }*/
+
+            Context.Update(item);
+
+            //Context.Groups.Update(item);
+            Context.SaveChanges();
         }
 
         public AssignmentResult GenerateAssignments(int groupId)
         {
-            using SecretSantaContext context = new SecretSantaContext();
+            //using SecretSantaContext context = new SecretSantaContext();
 
-            Group? group = context.Groups.Include(item => item.Users).Where(group => group.Id == groupId).FirstOrDefault();
+            //Group? group = context.Groups.Include(item => item.Users).Where(group => group.Id == groupId).FirstOrDefault();
+
+            Group? group = Context.Groups.Include(item => item.Users).Where(group => group.Id == groupId).FirstOrDefault();
 
             if (group is null)
             {
@@ -131,7 +148,8 @@ namespace SecretSanta.Business
                 group.Assignments.Add(new Assignment(users[i], users[endIndex], group));
             }
 
-            context.SaveChanges();
+            //context.SaveChanges();
+            Context.SaveChanges();
             return AssignmentResult.Success();
         }
     }

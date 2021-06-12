@@ -18,7 +18,7 @@ namespace SecretSanta.Data
             Group = group ?? throw new ArgumentNullException(nameof(group));
         }
 
-        private Assignment() // Currently unavoidable null-path due to EF weirdness
+        public Assignment() // Currently unavoidable null-path due to EF weirdness
         {}
     }
 }

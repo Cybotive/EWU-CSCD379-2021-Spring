@@ -194,25 +194,34 @@ namespace SecretSanta.Business.Tests
         }
 
         [TestMethod]
-        public void Save_WithValidItem_SavesItem()
+        public void Save_WithValidItemAndNewUser_SavesItem()
         {
             //Arrange
             GroupRepository sut = new();
 
             sut.Remove(42);
 
-            Group initialGroup = new Group() { Id = 42, Name = "BeforeUpdate" };
-            Group updatedGroup = new Group() { Id = 42, Name = "AfterUpdate" };
+            List<User> users = new() { new(), new() };
+            int usersCountBefore = users.Count;
+
+            Group initialGroup = new Group() { Id = 42, Name = "BeforeUpdate", Users = users };
+            //Group updatedGroup = new Group() { Id = 42, Name = "AfterUpdate" };
             sut.Create(initialGroup);
+
+            Group? updatedGroup = sut.GetItem(initialGroup.Id);
+            Assert.IsNotNull(updatedGroup);
+            updatedGroup.Name = "AfterUpdate";
+            updatedGroup.Users.Add(new());
 
             //Act
             sut.Save(updatedGroup);
+            Group? gotGroup = sut.GetItem(initialGroup.Id);
 
             //Assert
-            Group? gotGroup = sut.GetItem(42);
             Assert.IsNotNull(gotGroup);
-            Assert.AreEqual(42, gotGroup.Id);
+            Assert.AreEqual(initialGroup.Id, gotGroup.Id);
             Assert.AreEqual(updatedGroup.Name, gotGroup.Name);
+            Assert.AreEqual(usersCountBefore + 1, updatedGroup.Users.Count);
             
             sut.Remove(42);
         }

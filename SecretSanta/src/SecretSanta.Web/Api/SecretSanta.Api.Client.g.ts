@@ -860,6 +860,8 @@ export class User implements IUser {
     id!: number;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    groups?: Group[] | undefined;
+    gifts?: Gift[] | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -875,6 +877,16 @@ export class User implements IUser {
             this.id = _data["id"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            if (Array.isArray(_data["groups"])) {
+                this.groups = [] as any;
+                for (let item of _data["groups"])
+                    this.groups!.push(Group.fromJS(item));
+            }
+            if (Array.isArray(_data["gifts"])) {
+                this.gifts = [] as any;
+                for (let item of _data["gifts"])
+                    this.gifts!.push(Gift.fromJS(item));
+            }
         }
     }
 
@@ -890,6 +902,16 @@ export class User implements IUser {
         data["id"] = this.id;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        if (Array.isArray(this.groups)) {
+            data["groups"] = [];
+            for (let item of this.groups)
+                data["groups"].push(item.toJSON());
+        }
+        if (Array.isArray(this.gifts)) {
+            data["gifts"] = [];
+            for (let item of this.gifts)
+                data["gifts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -898,11 +920,71 @@ export interface IUser {
     id: number;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    groups?: Group[] | undefined;
+    gifts?: Gift[] | undefined;
+}
+
+export class Gift implements IGift {
+    id!: number;
+    title!: string;
+    description?: string | undefined;
+    url?: string | undefined;
+    priority!: number;
+    receiver?: User | undefined;
+
+    constructor(data?: IGift) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.url = _data["url"];
+            this.priority = _data["priority"];
+            this.receiver = _data["receiver"] ? User.fromJS(_data["receiver"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Gift {
+        data = typeof data === 'object' ? data : {};
+        let result = new Gift();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["url"] = this.url;
+        data["priority"] = this.priority;
+        data["receiver"] = this.receiver ? this.receiver.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IGift {
+    id: number;
+    title: string;
+    description?: string | undefined;
+    url?: string | undefined;
+    priority: number;
+    receiver?: User | undefined;
 }
 
 export class Assignment implements IAssignment {
+    id!: number;
     giver?: User | undefined;
     receiver?: User | undefined;
+    group?: Group | undefined;
 
     constructor(data?: IAssignment) {
         if (data) {
@@ -915,8 +997,10 @@ export class Assignment implements IAssignment {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.giver = _data["giver"] ? User.fromJS(_data["giver"]) : <any>undefined;
             this.receiver = _data["receiver"] ? User.fromJS(_data["receiver"]) : <any>undefined;
+            this.group = _data["group"] ? Group.fromJS(_data["group"]) : <any>undefined;
         }
     }
 
@@ -929,15 +1013,19 @@ export class Assignment implements IAssignment {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["giver"] = this.giver ? this.giver.toJSON() : <any>undefined;
         data["receiver"] = this.receiver ? this.receiver.toJSON() : <any>undefined;
+        data["group"] = this.group ? this.group.toJSON() : <any>undefined;
         return data; 
     }
 }
 
 export interface IAssignment {
+    id: number;
     giver?: User | undefined;
     receiver?: User | undefined;
+    group?: Group | undefined;
 }
 
 export class ProblemDetails implements IProblemDetails {

@@ -89,13 +89,13 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-            /*using (SecretSantaContext context = new SecretSantaContext())
+            using (SecretSantaContext context = new SecretSantaContext())
             {
                 if (context.Users.Find(item.Id) is null)
                 {
                     return;
                 }
-            }*/
+            }
 
             using (SecretSantaContext context = new SecretSantaContext())
             {

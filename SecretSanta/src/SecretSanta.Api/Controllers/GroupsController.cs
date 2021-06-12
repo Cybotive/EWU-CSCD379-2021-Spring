@@ -52,10 +52,10 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.Conflict)]
         public ActionResult<Dto.Group?> Post([FromBody] Dto.Group group)
         {
-            bool groupExists = GroupRepository.GetItem(group.Id) is not null;
+            /*bool groupExists = GroupRepository.GetItem(group.Id) is not null;
 
             if (groupExists)
-                return Conflict("Group already exists.");
+                return Conflict("Group already exists.");*/
 
             return Dto.Group.ToDto(GroupRepository.Create(Dto.Group.FromDto(group)!));
         }
