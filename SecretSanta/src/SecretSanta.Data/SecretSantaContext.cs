@@ -30,6 +30,15 @@ namespace SecretSanta.Data
             {
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
+
+            modelBuilder.Entity<User>()
+                .HasAlternateKey(user => new { user.FirstName, user.LastName });
+
+            modelBuilder.Entity<Gift>()
+                .HasAlternateKey(gift => new { gift.Title });
+
+            modelBuilder.Entity<Group>()  
+                .HasAlternateKey(group => new { group.Name });
         }
     }
 }
