@@ -1,0 +1,56 @@
+# Docs for the Azure Web Apps Deploy action: https://go.microsoft.com/fwlink/?linkid=2134798
+# More GitHub Actions for Azure: https://go.microsoft.com/fwlink/?linkid=2135048
+
+name: Deploy_Final_Assignment_To_Netlify
+
+on:
+  push:
+    branches: [ Assignment9 ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./SecretSanta/src/SecretSanta.Web
+
+    steps:
+    # checkout the repo
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@master
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+        
+    - name: npm install
+      run: npm install
+      
+    - name: npm build
+      run: npm run build:prod
+
+    - name: (WEB) Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: (WEB) dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/binSecretSanta
+
+    - name: (API) Build with dotnet
+      working-directory: ./SecretSanta/src/SecretSanta.Api
+      run: dotnet build --configuration Release
+
+    - name: (API) dotnet publish
+      working-directory: ./SecretSanta/src/SecretSanta.Api
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/apiSecretSanta
+        
+    - name: Publish generated Blazor webassembly to Netlify
+      uses: netlify/actions/cli@master #uses Netlify Cli actions
+      env: # These are the environment variables added in GitHub Secrets for this repo
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      with:
+          args: deploy --dir=${{env.DOTNET_ROOT}}/binSecretSanta --prod #push this folder to Netlify
+          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]' 
