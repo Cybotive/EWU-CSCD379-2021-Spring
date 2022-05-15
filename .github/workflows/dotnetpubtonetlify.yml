@@ -6,6 +6,7 @@ name: Deploy_Final_Assignment_To_Netlify
 on:
   push:
     branches: [ Assignment9 ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
